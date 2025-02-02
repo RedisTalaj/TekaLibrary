@@ -32,5 +32,4 @@ public class Book {
 
     @Column(name = "category", nullable = false)
     private String category;
-
 }

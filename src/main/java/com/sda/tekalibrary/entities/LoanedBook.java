@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,5 +28,4 @@ public class LoanedBook {
 
     @Column(name = "book_title", nullable = false)
     private String bookTitle;
-
 }
