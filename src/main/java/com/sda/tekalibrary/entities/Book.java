@@ -16,7 +16,11 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "book_id", nullable = false)
-    private int bookId;
+    private long bookId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "title", nullable = false)
     private String title;
@@ -32,4 +36,13 @@ public class Book {
 
     @Column(name = "category", nullable = false)
     private String category;
+
+    @Column(name = "image", nullable = false)
+    private String image;
+
+    @Column(name = "quantity", nullable = false)
+    private int quantity;
+
+    @Column(name = "price", nullable = false)
+    private double price;
 }

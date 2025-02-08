@@ -18,7 +18,15 @@ public class LoanedBook {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "loaned_book_id", nullable = false)
-    private String loanedId;
+    private long loanedId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id")
+    private Book book;
 
     @Column(name = "loan_date", nullable = false)
     private String loanDate;
