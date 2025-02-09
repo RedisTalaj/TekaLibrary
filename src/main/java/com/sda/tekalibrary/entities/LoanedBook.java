@@ -2,17 +2,11 @@ package com.sda.tekalibrary.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @Table(name = "loaned_books")
 public class LoanedBook {
     @Id
@@ -36,4 +30,52 @@ public class LoanedBook {
 
     @Column(name = "book_title", nullable = false)
     private String bookTitle;
+
+    public long getLoanedId() {
+        return loanedId;
+    }
+
+    public void setLoanedId(long loanedId) {
+        this.loanedId = loanedId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public String getLoanDate() {
+        return loanDate;
+    }
+
+    public void setLoanDate(String loanDate) {
+        this.loanDate = loanDate;
+    }
+
+    public String getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(String returnDate) {
+        this.returnDate = returnDate;
+    }
+
+    public String getBookTitle() {
+        return bookTitle;
+    }
+
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
+    }
 }

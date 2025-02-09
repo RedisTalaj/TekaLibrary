@@ -22,6 +22,7 @@ public class UserService {
     }
 
     public void addUser(User user){
+        user.setRole("User");
         userRepository.save(user);
     }
 
@@ -40,7 +41,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void deleteStudent(Long id){
+    public void deleteUser(Long id){
         userRepository.deleteById(id);
     }
 }

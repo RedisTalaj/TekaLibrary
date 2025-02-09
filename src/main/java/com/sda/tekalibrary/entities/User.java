@@ -20,7 +20,7 @@ public class User {
     private String username;
 
     @Column(name = "age", nullable = false)
-    private int age;
+    private Integer age;
 
     @Column(name = "lastname", nullable = false)
     private String lastname;
@@ -53,11 +53,11 @@ public class User {
         this.username = username;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge( Integer age) {
         this.age = age;
     }
 
