@@ -35,15 +35,47 @@ public class UserController {
         return "redirect:/users";
     }
 
-    @GetMapping("/login/{id}")
-    public String goToGetUser(Model model){
-        model.getAttribute("user");
+//    @GetMapping("/login")
+//    public String goToLogin(Model model) {
+//        model.addAttribute("User", new User());
+//        return "Login/login";
+//    }
+//
+//    @PostMapping("/login")
+//    public String login(
+//            @RequestParam String username,
+//            @RequestParam String password,
+//            @RequestParam String role,
+//            RedirectAttributes redirectAttributes) {
+//
+//        try {
+//            List<User> users = userService.login(username, password, role);
+//            if (!users.isEmpty()) {
+//                return "redirect:/signup";
+//            } else {
+//                redirectAttributes.addFlashAttribute("errorMessage", "Invalid username, password, or role.");
+//                return "redirect:/login";
+//            }
+//        } catch (RuntimeException e) {
+//            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+//            return "redirect:/login";
+//        }
+//    }
+
+    @GetMapping("/login")
+    public String goToLogin(Model model){
+        model.addAttribute("user", new User());
         return "Login/login";
     }
 
-    @PostMapping("/login/{id}")
-    public String getUserById(Long id){
-        userService.getUserById(id);
-        return "redirect:/users";
+    @PostMapping("/login")
+    public String login(@ModelAttribute("user")User user){
+        User logedInUser = userService.getUserByEmail(user.getEmail());
+        if (logedInUser.getPassword().equals(user.getPassword())){
+            user.setRole(logedInUser.getRole());
+        }
+
+        return "redirect:MainPage/index";
     }
+
 }

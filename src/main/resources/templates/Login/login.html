@@ -1,31 +1,27 @@
-<html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" dir="ltr" >
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
-    <link rel="stylesheet" th:href="@{/signup/signup.css}">
+    <link rel="stylesheet" th:href="@{/login/login.css}">
 </head>
 <body>
 <div class="wrapper">
     <h2>Login</h2>
-    <form th:action="@{/users/login}" th:object="${user}" method="post" >
+    <form th:action="@{/users/login}" th:object="${user}" method="post">
         <div class="input-box">
-            <input type="text" placeholder="Enter your name" th:field="*{username}" required>
+            <input type="text" placeholder="Enter your username" th:field="*{email}" required>
         </div>
         <div class="input-box">
-            <input type="password" placeholder="Create password" th:field="*{password}" required>
-        </div>
-        <div class="policy">
-            <input type="checkbox">
-            <h3>I accept all terms & condition</h3>
+            <input type="password" placeholder="Enter your password" th:field="*{password}" required>
         </div>
         <div class="input-box button">
-            <input type="Submit" value="Register Now">
-        </div>
-        <div class="text">
-            <h3>Already have an account? <a th:href="@{/login.html}">Login now</a></h3>
+            <input type="submit" value="Log In">
         </div>
     </form>
+    <div th:if="${errorMessage}" class="error-message">
+        <p th:text="${errorMessage}"></p>
+    </div>
 </div>
 </body>
 </html>

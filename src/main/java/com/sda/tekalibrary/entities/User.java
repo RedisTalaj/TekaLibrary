@@ -16,25 +16,25 @@ public class User {
     @Column(name = "user_id", nullable = false)
     private long userId;
 
-    @Column(name = "username", nullable = false)
+    @Column(name = "username")
     private String username;
 
-    @Column(name = "age", nullable = false)
+    @Column(name = "age")
     private Integer age;
 
-    @Column(name = "lastname", nullable = false)
+    @Column(name = "lastname")
     private String lastname;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "address", nullable = false)
+    @Column(name = "address")
     private String address;
 
-    @Column(name = "role", nullable = false)
+    @Column(name = "role")
     private String role;
 
     public long getUserId() {

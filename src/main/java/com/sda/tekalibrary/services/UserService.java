@@ -44,4 +44,22 @@ public class UserService {
     public void deleteUser(Long id){
         userRepository.deleteById(id);
     }
+
+    public User getUserByEmailAndPassword(String email, String password){
+        User user = userRepository.findByEmailAndPassword(email, password);
+        return user;
+    }
+
+
+    public User getUserByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+
+    public User login(String email, String password, String role) {
+        User user = userRepository.findByEmailAndPasswordAndRole(email, password, role);
+        if (email.isEmpty()) {
+            throw new RuntimeException("Invalid email, password");
+        }
+        return user;
+    }
 }
