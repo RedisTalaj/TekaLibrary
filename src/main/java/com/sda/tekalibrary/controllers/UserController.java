@@ -35,32 +35,6 @@ public class UserController {
         return "redirect:/users";
     }
 
-//    @GetMapping("/login")
-//    public String goToLogin(Model model) {
-//        model.addAttribute("User", new User());
-//        return "Login/login";
-//    }
-//
-//    @PostMapping("/login")
-//    public String login(
-//            @RequestParam String username,
-//            @RequestParam String password,
-//            @RequestParam String role,
-//            RedirectAttributes redirectAttributes) {
-//
-//        try {
-//            List<User> users = userService.login(username, password, role);
-//            if (!users.isEmpty()) {
-//                return "redirect:/signup";
-//            } else {
-//                redirectAttributes.addFlashAttribute("errorMessage", "Invalid username, password, or role.");
-//                return "redirect:/login";
-//            }
-//        } catch (RuntimeException e) {
-//            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-//            return "redirect:/login";
-//        }
-//    }
 
     @GetMapping("/login")
     public String goToLogin(Model model){
@@ -69,13 +43,18 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute("user")User user){
+    public String login(@ModelAttribute("user")User user) {
         User logedInUser = userService.getUserByEmail(user.getEmail());
-        if (logedInUser.getPassword().equals(user.getPassword())){
+        if (logedInUser.getPassword().equals(user.getPassword())) {
             user.setRole(logedInUser.getRole());
+            if (logedInUser.getRole().equals("Admin")) {
+                return "redirect:/users";
+            } else {
+                //do dergohet te dashboard, por per placeholder vendosim login page
+                return "redirect:/login";
+            }
         }
-
-        return "redirect:MainPage/index";
+        return "";
     }
 
 }
