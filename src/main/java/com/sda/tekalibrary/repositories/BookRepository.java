@@ -12,7 +12,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     //kerko libra ne baze te autorit
     List<Book> findBooksByAuthor(String author);
 
-
     //search-box
     List<Book> searchByTitle(String title);
 }

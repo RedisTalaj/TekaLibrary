@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class UserController {
     public String getAllUsers(Model model){
         List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);
-        return "User/users";
+        return "AdminPage/index";
     }
 
     @GetMapping("/signup")
@@ -30,9 +31,17 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String addUser(@ModelAttribute("user")User user){
-        userService.addUser(user);
-        return "redirect:/users";
+    public String addUser(@ModelAttribute("user")User user, Model model){
+        User userExists = userService.getUserByEmail(user.getEmail());
+
+        if (userExists != null && userExists.getEmail().equals(user.getEmail())) {
+            model.addAttribute("errorMessageEmail",
+                    "Email already in use");
+            return "signup/signup";
+        } else {
+            userService.addUser(user);
+            return "redirect:/users";
+        }
     }
 
 
@@ -43,18 +52,64 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute("user")User user) {
+    public String login(@ModelAttribute("user")User user,RedirectAttributes redirectAttributes) {
         User logedInUser = userService.getUserByEmail(user.getEmail());
-        if (logedInUser.getPassword().equals(user.getPassword())) {
-            user.setRole(logedInUser.getRole());
-            if (logedInUser.getRole().equals("Admin")) {
-                return "redirect:/users";
-            } else {
-                //do dergohet te dashboard, por per placeholder vendosim login page
-                return "redirect:/login";
+        //kontrollon ne qofte se perdoruesi ka vendosur te dhenat e sakta
+        Boolean passwordAndEmailIncorrect = userService.getUserByEmailAndPassword(user.getEmail(), user.getPassword());
+        if(!passwordAndEmailIncorrect){
+            redirectAttributes.addFlashAttribute("errorMessageEmailOrPassword", "Email or password incorrect");
+            return "redirect:/users/login";
+        }
+        else{
+            if (logedInUser.getPassword().equals(user.getPassword())) {
+                user.setRole(logedInUser.getRole());
+                if (logedInUser.getRole().equals("Admin")) {
+                    return "redirect:/users";
+                } else {
+                    //do dergohet te dashboard, por per placeholder vendosim login page
+                    redirectAttributes.addFlashAttribute("errorMessageEmailOrPassword", "Logged in successfully");
+                    return "redirect:/users/login";
+                }
             }
         }
         return "";
     }
 
+    @GetMapping("/create")
+    public String goToCreateUser(Model model){
+        model.addAttribute("user", new User());
+        return "AdminPage/create_user";
+    }
+
+    @PostMapping("/create")
+    public String createUser(@ModelAttribute("user") User user, Model model) {
+        User userExists = userService.getUserByEmail(user.getEmail());
+
+        if (userExists != null && userExists.getEmail().equals(user.getEmail())) {
+            model.addAttribute("errorMessage", "Email already in use");
+            return "AdminPage/create_user";
+        } else {
+            userService.createUser(user);
+            return "redirect:/users";
+        }
+    }
+
+    @GetMapping("/delete/{id}")
+    public String goToDeleteUser(Model model){
+        model.addAttribute("user", new User());
+        return "AdminPage/index";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String deleteUser(@ModelAttribute("user") User user, @PathVariable Long id, RedirectAttributes redirectAttributes){
+        User userAdmin = userService.getUserById(id);
+        if (!"Admin".equals(userAdmin.getRole())) {
+            userService.deleteUser(id);
+            return "redirect:/users";
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessageAdmin",
+                    "This user is Admin and can't be deleted");
+            return "redirect:/users";
+        }
+    }
 }

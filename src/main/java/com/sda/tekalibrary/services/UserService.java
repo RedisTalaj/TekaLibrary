@@ -26,6 +26,10 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void createUser(User user){
+        userRepository.save(user);
+    }
+
     public User getUserById(Long id){
         return userRepository.findById(id).get();
     }
@@ -41,13 +45,13 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void deleteUser(Long id){
-        userRepository.deleteById(id);
+    public void deleteUser(Long userId){
+        userRepository.deleteById(userId);
     }
 
-    public User getUserByEmailAndPassword(String email, String password){
-        User user = userRepository.findByEmailAndPassword(email, password);
-        return user;
+    public Boolean getUserByEmailAndPassword(String email, String password){
+        return userRepository.existsByEmailAndPassword(email, password);
+
     }
 
 
@@ -61,5 +65,9 @@ public class UserService {
             throw new RuntimeException("Invalid email, password");
         }
         return user;
+    }
+
+    public User getUserByRole(String role){
+        return userRepository.findByRole(role);
     }
 }

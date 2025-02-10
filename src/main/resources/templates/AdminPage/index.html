@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User & Library Management System</title>
+    <link rel="stylesheet" th:href="@{/AdminPageCss/index.css}">
+</head>
+<body>
+<!-- Navbar -->
+<header>
+    <nav>
+        <a th:href="@{/users}">Home</a>
+        <a th:href="@{/users/create}">Add User</a>
+    </nav>
+</header>
+
+<!-- Search Bar -->
+<div class="search-bar">
+    <form th:action="@{/users/search}" method="get">
+        <input type="text" name="keyword" placeholder="Search by name..." required>
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+<!-- Page Content -->
+<h2>Users List</h2>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Lastname</th>
+        <th>Age</th>
+        <th>Address</th>
+        <th>Role</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.userId}"></td>
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.lastname}"></td>
+        <td th:text="${user.age}"></td>
+        <td th:text="${user.address}"></td>
+        <td th:text="${user.role}"></td>
+        <td class="actions">
+            <!-- Update Button -->
+            <a th:href="@{/users/update/{id}(id=${user.userId})}">
+                <button class="update">Update</button>
+            </a>
+            <!-- Delete Button -->
+            <form th:action="@{/users/delete/{id}(id=${user.userId})}" method="post" style="display: inline;">
+                <button type="submit" class="delete" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Error Message -->
+<div th:if="${errorMessageAdmin}" class="alert alert-danger">
+    <span th:text="${errorMessageAdmin}"></span>
+</div>
+
+<!-- Create New User Button -->
+<div class="create-user-button">
+    <a th:href="@{/users/create}">
+        <button>Create New User</button>
+    </a>
+</div>
+</body>
+</html>
