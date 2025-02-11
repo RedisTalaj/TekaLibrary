@@ -40,11 +40,12 @@
         <th>Email</th>
         <th>Address</th>
         <th>Role</th>
+        <th>Status</th>
         <th>Actions</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="user : ${users}">
+    <tr th:each="user : ${users}" th:style="${user.status == 'Inactive'} ? 'background-color: #ffcccc;' : ''">
         <td th:text="${user.userId}"></td>
         <td th:text="${user.username}"></td>
         <td th:text="${user.lastname}"></td>
@@ -52,6 +53,7 @@
         <td th:text="${user.email}"></td>
         <td th:text="${user.address}"></td>
         <td th:text="${user.role}"></td>
+        <td th:text="${user.status}"></td>
         <td class="actions">
             <!-- Update Button -->
             <a th:href="@{/users/update/{id}(id=${user.userId})}">

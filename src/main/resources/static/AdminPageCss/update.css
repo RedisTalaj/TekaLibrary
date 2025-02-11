@@ -112,3 +112,14 @@ h1 {
 .cancel-button:hover {
     background-color: #5a6268;
 }
+
+.alert {
+    padding: 12px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}

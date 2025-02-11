@@ -140,9 +140,14 @@ public class UserController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateUser(@ModelAttribute User user, @PathVariable Long id){
-
-        userService.updateUser(id, user);
-        return "redirect:/users";
+    public String updateUser(@ModelAttribute User user, @PathVariable Long id, RedirectAttributes redirectAttributes){
+        User userAdmin = userService.getUserById(id);
+        if("Admin".equals(userAdmin.getRole())){
+            redirectAttributes.addFlashAttribute("errorMessageAdmin", "This user is admin and can't change its data.");
+            return "redirect:/users/update/{id}";
+        }else{
+            userService.updateUser(id, user);
+            return "redirect:/users";
+        }
     }
 }

@@ -19,6 +19,9 @@
         <div class="input-box button">
             <input type="submit" value="Log In">
         </div>
+        <div class="text">
+            <h3>Don't have an account? <a th:href="@{/users/signup}">Sign up now</a></h3>
+        </div>
         <div th:if="${errorMessageEmailOrPassword}" class="error-message">
             <p th:text="${errorMessageEmailOrPassword}"></p>
         </div>

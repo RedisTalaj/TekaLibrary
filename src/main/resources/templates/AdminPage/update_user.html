@@ -3,6 +3,18 @@
 <head>
     <title>Update User</title>
     <link rel="stylesheet" type="text/css" th:href="@{/AdminPageCss/update.css}">
+    <style>
+        .alert {
+            padding: 12px;
+            border: 1px solid transparent;
+            border-radius: 5px;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+    </style>
 </head>
 <body>
 <!-- Navbar -->
@@ -25,6 +37,10 @@
     <button type="submit">Update</button>
     <br>
     <a th:href="@{/users}" class="cancel-button">Cancel</a>
+    <!-- Error Message -->
+    <div th:if="${errorMessageAdmin}" class="alert alert-danger">
+        <span th:text="${errorMessageAdmin}"></span>
+    </div>
 </form>
 </body>
 </html>
