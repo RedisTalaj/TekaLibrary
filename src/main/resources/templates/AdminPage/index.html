@@ -18,13 +18,18 @@
 <!-- Search Bar -->
 <div class="search-bar">
     <form th:action="@{/users/search}" method="get">
-        <input type="text" name="keyword" placeholder="Search by name..." required>
+        <input type="text" name="keyword" placeholder="Search by name..." th:value="${keyword}" required>
         <button type="submit">Search</button>
     </form>
 </div>
 
 <!-- Page Content -->
 <h2>Users List</h2>
+
+<!-- Error Message -->
+<div th:if="${errorMessageSearch}" class="alert alert-danger">
+    <span th:text="${errorMessageSearch}"></span>
+</div>
 <table>
     <thead>
     <tr>
@@ -32,6 +37,7 @@
         <th>Username</th>
         <th>Lastname</th>
         <th>Age</th>
+        <th>Email</th>
         <th>Address</th>
         <th>Role</th>
         <th>Actions</th>
@@ -43,6 +49,7 @@
         <td th:text="${user.username}"></td>
         <td th:text="${user.lastname}"></td>
         <td th:text="${user.age}"></td>
+        <td th:text="${user.email}"></td>
         <td th:text="${user.address}"></td>
         <td th:text="${user.role}"></td>
         <td class="actions">

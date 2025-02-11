@@ -2,6 +2,8 @@ package com.sda.tekalibrary.controllers;
 
 import com.sda.tekalibrary.entities.User;
 import com.sda.tekalibrary.services.UserService;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,14 +63,20 @@ public class UserController {
             return "redirect:/users/login";
         }
         else{
-            if (logedInUser.getPassword().equals(user.getPassword())) {
-                user.setRole(logedInUser.getRole());
-                if (logedInUser.getRole().equals("Admin")) {
-                    return "redirect:/users";
-                } else {
-                    //do dergohet te dashboard, por per placeholder vendosim login page
-                    redirectAttributes.addFlashAttribute("errorMessageEmailOrPassword", "Logged in successfully");
-                    return "redirect:/users/login";
+            if (logedInUser.getStatus().equals("Inactive")) {
+                redirectAttributes.addFlashAttribute("errorMessageEmailOrPassword", "User is inactive");
+                return "redirect:/users/login";
+            }
+            else if (logedInUser.getStatus().equals("Active")) {
+                if (logedInUser.getPassword().equals(user.getPassword())) {
+                    user.setRole(logedInUser.getRole());
+                    if (logedInUser.getRole().equals("Admin")) {
+                        return "redirect:/users";
+                    } else {
+                        //do dergohet te dashboard, por per placeholder vendosim login page
+                        redirectAttributes.addFlashAttribute("errorMessageEmailOrPassword", "Logged in successfully");
+                        return "redirect:/users/login";
+                    }
                 }
             }
         }
@@ -111,5 +119,30 @@ public class UserController {
                     "This user is Admin and can't be deleted");
             return "redirect:/users";
         }
+    }
+
+    @GetMapping("/search")
+    public String searchUsers(@RequestParam("keyword") String keyword, Model model) {
+        List<User> users = userService.searchByUsername(keyword);
+        if (users.isEmpty()) {
+            model.addAttribute("errorMessageSearch", "No users found with the given keyword.");
+        } else {
+            model.addAttribute("users", users);
+        }
+        model.addAttribute("keyword", keyword);
+        return "AdminPage/index";
+    }
+
+    @GetMapping("/update/{id}")
+    public String goToUpdateUser(Model model, @PathVariable Long id){
+        model.addAttribute("user", userService.getUserById(id));
+        return "AdminPage/update_user";
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateUser(@ModelAttribute User user, @PathVariable Long id){
+
+        userService.updateUser(id, user);
+        return "redirect:/users";
     }
 }
