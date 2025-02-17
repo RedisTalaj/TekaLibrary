@@ -27,6 +27,10 @@
         <div class="input-box">
             <input type="password" placeholder="Create password" th:field="*{password}" required>
         </div>
+        <!-- Error Message -->
+        <div th:if="${errorMessagePassword}" class="alert alert-danger">
+            <span th:text="${errorMessagePassword}"></span>
+        </div>
         <div class="policy">
             <input type="checkbox" required>
             <h3>I accept all terms & condition</h3>

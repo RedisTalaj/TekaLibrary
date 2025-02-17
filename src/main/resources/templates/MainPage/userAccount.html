@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" th:href="@{/MainPageCss/userPage.css}">
+</head>
+<body>
+<div>
+    <h2>User Profile</h2>
+    <div>
+        <div th:each="user : ${user}">
+            <label>Username:</label>
+            <span th:text="${user.username}"></span>
+        </div>
+        <div>
+            <label>Lastname:</label>
+            <span th:text="${user.lastname}"></span>
+        </div>
+        <div>
+            <label>Age:</label>
+            <span th:text="${user.age}"></span>
+        </div>
+        <div>
+            <label>Email:</label>
+            <span th:text="${user.email}"></span>
+        </div>
+        <div>
+            <label>Address:</label>
+            <span th:text="${user.address}"></span>
+        </div>
+        <div>
+            <label>Role:</label>
+            <span th:text="${user.role}"></span>
+        </div>
+        <div>
+            <label>Status:</label>
+            <span th:text="${user.status}"></span>
+        </div>
+        <div>
+            <a th:href="@{/users/update/{id}(id=${user.userId})}">
+                <button class="update">Update</button>
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

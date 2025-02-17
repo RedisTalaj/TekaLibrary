@@ -37,13 +37,19 @@ public class UserController {
         User userExists = userService.getUserByEmail(user.getEmail());
 
         if (userExists != null && userExists.getEmail().equals(user.getEmail())) {
-            model.addAttribute("errorMessageEmail",
-                    "Email already in use");
+            model.addAttribute("errorMessageEmail", "Email already in use");
             return "signup/signup";
-        } else {
-            userService.addUser(user);
-            return "redirect:/users";
         }
+        if (user.getPassword().length() < 7) {
+            model.addAttribute("errorMessagePassword", "Password must be at least 7 characters long.");
+            return "signup/signup";
+        }
+        if (!user.getPassword().matches(".*[A-Z].*")) {
+            model.addAttribute("errorMessagePassword", "Password must contain at least one uppercase letter.");
+            return "signup/signup";
+        }
+        userService.addUser(user);
+        return "redirect:/users/login";
     }
 
 
@@ -96,7 +102,16 @@ public class UserController {
         if (userExists != null && userExists.getEmail().equals(user.getEmail())) {
             model.addAttribute("errorMessage", "Email already in use");
             return "AdminPage/create_user";
-        } else {
+        }
+        if(user.getPassword().length() < 7){
+            model.addAttribute("errorMessage", "Password must be at least 7 characters long.");
+            return "AdminPage/create_user";
+        }
+        if (!user.getPassword().matches(".*[A-Z].*")) {
+            model.addAttribute("errorMessage", "Password must contain at least one uppercase letter.");
+            return "AdminPage/create_user";
+        }
+        else {
             userService.createUser(user);
             return "redirect:/users";
         }
