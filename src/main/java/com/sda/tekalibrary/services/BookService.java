@@ -59,4 +59,12 @@ public class BookService {
     public List<Book> searchBooksByTitle(String title) {
         return bookRepository.searchByTitle(title);
     }
+
+    public Book getBookByIsbn(String isbn){
+        return bookRepository.findByIsbn(isbn);
+    }
+
+    public List<Book> searchBookByAuthorOrTitle(String author, String title){
+        return bookRepository.findBooksByAuthorOrTitle(author, title);
+    }
 }
