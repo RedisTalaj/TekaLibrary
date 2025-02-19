@@ -3,46 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>User Profile</title>
     <link rel="stylesheet" th:href="@{/MainPageCss/userPage.css}">
 </head>
 <body>
 <div>
-    <h2>User Profile</h2>
-    <div>
-        <div th:each="user : ${user}">
-            <label>Username:</label>
-            <span th:text="${user.username}"></span>
+    <header>
+        <nav>
+            <a th:href="@{/books/MainPage}">Home</a>
+        </nav>
+    </header>
+    <div class="user-information">
+        <h2>User Profile</h2>
+        <div class="user-information-left">
+            <h3>Personal Information</h3>
+            <p>First Name: <span th:text="${user.username}"></span></p>
+            <p>Last Name: <span th:text="${user.lastname}"></span></p>
+            <p>Email: <span th:text="${user.email}"></span></p>
+            <p>Address: <span th:text="${user.address}"></span></p>
         </div>
-        <div>
-            <label>Lastname:</label>
-            <span th:text="${user.lastname}"></span>
+        <div class="user-information-right">
+            <h3>Account Information</h3>
+            <p>Username: <span th:text="${user.username}"></span></p>
+            <p>Password: <span th:text="${user.password}"></span></p>
+            <p>Role: <span th:text="${user.role}"></span></p>
+            <p>Status: <span th:text="${user.status}"></span></p>
         </div>
-        <div>
-            <label>Age:</label>
-            <span th:text="${user.age}"></span>
-        </div>
-        <div>
-            <label>Email:</label>
-            <span th:text="${user.email}"></span>
-        </div>
-        <div>
-            <label>Address:</label>
-            <span th:text="${user.address}"></span>
-        </div>
-        <div>
-            <label>Role:</label>
-            <span th:text="${user.role}"></span>
-        </div>
-        <div>
-            <label>Status:</label>
-            <span th:text="${user.status}"></span>
-        </div>
-        <div>
-            <a th:href="@{/users/update/{id}(id=${user.userId})}">
+        <div class="actions">
+            <a th:href="@{/books/update/{id}(id=${user.userId})}">
                 <button class="update">Update</button>
             </a>
         </div>
+    </div>
+    <div>
+        <h2>Favourite Books</h2>
+
+    </div>
+    <div>
+        <h2>Order History</h2>
     </div>
 </div>
 </body>

@@ -2,12 +2,12 @@ package com.sda.tekalibrary.controllers;
 
 import com.sda.tekalibrary.entities.User;
 import com.sda.tekalibrary.services.UserService;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -60,7 +60,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute("user")User user,RedirectAttributes redirectAttributes) {
+    public String login(@ModelAttribute("user")User user,RedirectAttributes redirectAttributes, HttpSession session) {
         User logedInUser = userService.getUserByEmail(user.getEmail());
         //kontrollon ne qofte se perdoruesi ka vendosur te dhenat e sakta
         Boolean passwordAndEmailIncorrect = userService.getUserByEmailAndPassword(user.getEmail(), user.getPassword());
@@ -77,11 +77,14 @@ public class UserController {
                 if (logedInUser.getPassword().equals(user.getPassword())) {
                     user.setRole(logedInUser.getRole());
                     if (logedInUser.getRole().equals("Admin")) {
+                        session.setAttribute("user", logedInUser);
                         return "redirect:/users";
                     } else {
                         //do dergohet te dashboard, por per placeholder vendosim login page
-                        redirectAttributes.addFlashAttribute("errorMessageEmailOrPassword", "Logged in successfully");
-                        return "redirect:/users/login";
+                        redirectAttributes.addFlashAttribute("errorMessageEmailOrPassword",
+                                "Logged in successfully");
+                        session.setAttribute("user", logedInUser);
+                        return "redirect:/users/user-profile";
                     }
                 }
             }
@@ -164,5 +167,15 @@ public class UserController {
             userService.updateUser(id, user);
             return "redirect:/users";
         }
+    }
+
+    @GetMapping("/user-profile")
+    public String getUserProfile(Model model, HttpSession session){
+        User user = (User) session.getAttribute("user");
+        if(user == null){
+            return "redirect:/users/login";
+        }
+        model.addAttribute("user", user);
+        return "MainPage/userAccount";
     }
 }

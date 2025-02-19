@@ -1,7 +1,10 @@
 package com.sda.tekalibrary.repositories;
 
 import com.sda.tekalibrary.entities.Book;
+import com.sda.tekalibrary.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,5 +20,11 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     Book findByIsbn(String isbn);
 
-    List<Book> findBooksByAuthorOrTitle(String author, String title);
+    //kerko libra ne baze te autori ose titullit
+    @Query(value = "select b from Book b where b.author like %:keyword% or b.title like %:keyword%")
+    List<Book> searchByAuthorOrTitle(@Param("keyword") String keyword);
+
+    //afisho te gjitha librat sipas kategorise Comedy
+    @Query(value = "select b from Book b where b.category = 'Comedy'")
+    List<Book> findBooksByCategoryComedy();
 }

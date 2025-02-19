@@ -14,11 +14,6 @@ public class Book {
     @Column(name = "book_id", nullable = false)
     private long bookId;
 
-    /*Foreign Key*/
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
     @Column(name = "title", nullable = false)
     private String title;
 
@@ -34,8 +29,8 @@ public class Book {
     @Column(name = "category", nullable = false)
     private String category;
 
-    @Column(name = "image", nullable = false)
-    private String image;
+    @Column(name = "image_path", nullable = false)
+    private String imagePath;
 
     @Column(name = "quantity", nullable = false)
     private int quantity;
@@ -49,14 +44,6 @@ public class Book {
 
     public void setBookId(long bookId) {
         this.bookId = bookId;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getTitle() {
@@ -99,14 +86,6 @@ public class Book {
         this.category = category;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     public int getQuantity() {
         return quantity;
     }
@@ -121,5 +100,13 @@ public class Book {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

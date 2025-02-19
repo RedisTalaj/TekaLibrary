@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TekaLibrary</title>
+    <link rel="stylesheet" th:href="@{/MainPageCss/mainPage.css}">
+    <script th:src="@{/MainPageCss/mainPage.js}"></script>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navigationWrapper">
+    <div class="logoWrapper">
+        <span class="stylish">Stylish</span>
+        <span class="logo">Logo</span>
+    </div>
+    <ul class="navigation">
+        <li class="parent"><a class="link" href="#">Home</a></li>
+        <li>
+            <!--Search Bar-->
+            <div class="search-bar">
+                <form th:action="@{/books/searchMainPage}" method="get">
+                    <input type="text" name="keyword" placeholder="Search by title or author..."
+                           th:value="${author != null ? author : (title != null ? title : '')}" required>
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+        </li>
+        <li class="parent"><a class="link" href="#">Account</a></li>
+        <li class="parent" id="clients">
+            <a class="link" href="#"><i class="fas fa-minus"></i> Clients <i class="fas fa-plus"></i></a>
+            <ul class="subnavigation">
+                <li><a class="link" th:href="@{/users/user-profile}">User Profile</a></li>
+                <li><a class="link" th:href="@{/MainPage/favourite_books.html}">Favourite Books</a></li>
+                <li><a class="link" th:href="@{/MainPage/order_history.html}">Order History</a></li>
+                <li>
+                    <form>
+                        <button type="submit" class="logout">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </li>
+        <li class="parent" id="services">
+            <a class="link" href="#"><i class="fas fa-minus"></i> Services <i class="fas fa-plus"></i></a>
+            <ul class="subnavigation">
+                <li><a class="link" href="#">Print Design</a></li>
+                <li><a class="link" href="#">Web Design</a></li>
+                <li><a class="link" href="#">Mobile App Development</a></li>
+            </ul>
+        </li>
+        <li class="parent"><a class="link" href="#">Contact</a></li>
+    </ul>
+</nav>
+
+
+<!-- Swiper for Books -->
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide" th:each="book : ${books}">
+            <div class="book-item">
+                <img th:src="@{${book.imagePath}}" alt="Book Image" class="book-image">
+                <div class="book-details">
+                    <h3 th:text="${book.title}"></h3>
+                    <p th:text="${book.author}"></p>
+                    <p th:text="${book.category}"></p>
+                    <a th:href="@{/MainPage/book-details/{id}(id=${book.bookId})}">
+                        <button class="details">Details</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="swiper-pagination"></div>
+</div>
+
+<!-- Categories Section -->
+<div class="categories">
+    <h2>Fiction Books</h2>
+    <div class="category-books">
+        <div class="book-item" th:each="book : ${comedyBooks}">
+            <img th:src="@{${book.imagePath}}" alt="Book Image" class="book-image">
+            <div class="book-details">
+                <h3 th:text="${book.title}"></h3>
+                <p th:text="${book.author}"></p>
+                <p th:text="${book.category}"></p>
+                <a th:href="@{/MainPage/book-details/{id}(id=${book.bookId})}">
+                    <button class="details">Details</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-content">
+        <h3>About Us</h3>
+        <p>Our goal is to provide you with the best books to read. We have a wide range of books from different genres.</p>
+    </div>
+    <div class="footer-content">
+        <h3>Quick Links</h3>
+        <ul>
+            <li><a th:href="@{/MainPage/about_us.html}">About Us</a></li>
+            <li><a th:href="@{/MainPage/contact_us.html}">Contact Us</a></li>
+            <li><a th:href="@{/MainPage/privacy_policy.html}">Privacy Policy</a></li>
+        </ul>
+    </div>
+    <div class="footer-content">
+        <h3>Follow Us</h3>
+        <ul>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">Instagram</a></li>
+        </ul>
+    </div>
+</footer>
+</body>
+</html>

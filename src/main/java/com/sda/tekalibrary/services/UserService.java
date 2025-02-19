@@ -4,7 +4,6 @@ import com.sda.tekalibrary.entities.User;
 import com.sda.tekalibrary.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.List;
 
@@ -60,5 +59,14 @@ public class UserService {
 
     public List<User> searchByUsername(String keyword){
         return userRepository.searchByUsername(keyword);
+    }
+
+    public User findByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+
+    public User getUserProfile(String email){
+        User user = userRepository.findByEmail(email);
+        return user;
     }
 }

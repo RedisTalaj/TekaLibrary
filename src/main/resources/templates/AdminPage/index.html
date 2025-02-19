@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User & Library Management System</title>
-    <link rel="stylesheet" th:href="@{/AdminPageCss/index.css}">
+    <link rel="stylesheet" th:href="@{/UserCss/index.css}">
 </head>
 <body>
 <!-- Navbar -->
@@ -12,6 +12,7 @@
     <nav>
         <a th:href="@{/users}">Home</a>
         <a th:href="@{/users/create}">Add User</a>
+        <a th:href="@{/books}">Book Management</a>
     </nav>
 </header>
 
@@ -79,5 +80,37 @@
         <button>Create New User</button>
     </a>
 </div>
+<!-- JavaScript -->
+<script>
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // Confirmation for delete actions
+    document.querySelectorAll('.delete').forEach(button => {
+        button.addEventListener('click', function (e) {
+            if (!confirm('Are you sure you want to delete this user?')) {
+                e.preventDefault();
+            }
+        });
+    });
+
+    // Add fade-in effect to the table rows
+    document.addEventListener('DOMContentLoaded', () => {
+        const rows = document.querySelectorAll('table tbody tr');
+        rows.forEach((row, index) => {
+            setTimeout(() => {
+                row.style.opacity = '1';
+                row.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    });
+</script>
 </body>
 </html>

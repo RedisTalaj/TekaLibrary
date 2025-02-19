@@ -4,14 +4,22 @@ import com.sda.tekalibrary.entities.Book;
 import com.sda.tekalibrary.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
 
     private final BookRepository bookRepository;
+    String UPLOAD_DIR = "src/main/resources/static/images/";
 
     @Autowired
     public BookService(BookRepository bookRepository) {
@@ -39,7 +47,7 @@ public class BookService {
             book.setDescription(updatedBook.getDescription());
             book.setIsbn(updatedBook.getIsbn());
             book.setCategory(updatedBook.getCategory());
-            book.setImage(updatedBook.getImage());
+            book.setImagePath(updatedBook.getImagePath());
             book.setQuantity(updatedBook.getQuantity());
             book.setPrice(updatedBook.getPrice());
             bookRepository.save(book);
@@ -64,7 +72,18 @@ public class BookService {
         return bookRepository.findByIsbn(isbn);
     }
 
-    public List<Book> searchBookByAuthorOrTitle(String author, String title){
-        return bookRepository.findBooksByAuthorOrTitle(author, title);
+    public List<Book> searchBookByAuthorOrTitle(String keyword){
+        return bookRepository.searchByAuthorOrTitle(keyword);
+    }
+
+    public List<Book> getNewestBooks() {
+        return bookRepository.findAll().stream()
+                .sorted(Comparator.comparing(Book::getBookId).reversed())
+                .limit(3)
+                .collect(Collectors.toList());
+    }
+
+    public List<Book> getBooksByCategoryComedy(){
+        return bookRepository.findBooksByCategoryComedy();
     }
 }
