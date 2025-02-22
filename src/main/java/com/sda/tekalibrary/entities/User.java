@@ -2,24 +2,29 @@ package com.sda.tekalibrary.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.processing.Pattern;
-import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
     private long userId;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "favorite_books",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
+    private Set<Book> favoriteBooks = new HashSet<>();
 
     @Column(name = "username")
     private String username;
@@ -53,6 +58,14 @@ public class User {
         this.userId = userId;
     }
 
+    public Set<Book> getFavoriteBooks() {
+        return favoriteBooks;
+    }
+
+    public void setFavoriteBooks(Set<Book> favoriteBooks) {
+        this.favoriteBooks = favoriteBooks;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -65,7 +78,7 @@ public class User {
         return age;
     }
 
-    public void setAge( Integer age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

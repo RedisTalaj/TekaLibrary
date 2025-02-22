@@ -4,15 +4,28 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "books")
 public class Book {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "book_id", nullable = false)
     private long bookId;
+
+    @ManyToMany(mappedBy = "favoriteBooks")
+    private Set<User> users = new HashSet<>();
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LoanedBook> loanedBooks;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FavoriteBook> favoriteBooks;
 
     @Column(name = "title", nullable = false)
     private String title;
@@ -38,6 +51,7 @@ public class Book {
     @Column(name = "price", nullable = false)
     private double price;
 
+    // Getters and setters
     public long getBookId() {
         return bookId;
     }
@@ -108,5 +122,29 @@ public class Book {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
+    public List<LoanedBook> getLoanedBooks() {
+        return loanedBooks;
+    }
+
+    public void setLoanedBooks(List<LoanedBook> loanedBooks) {
+        this.loanedBooks = loanedBooks;
+    }
+
+    public List<FavoriteBook> getFavoriteBooks() {
+        return favoriteBooks;
+    }
+
+    public void setFavoriteBooks(List<FavoriteBook> favoriteBooks) {
+        this.favoriteBooks = favoriteBooks;
     }
 }

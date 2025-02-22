@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" th:href="@{/Logo/icon.png}">
     <title>TekaLibrary</title>
-    <link rel="stylesheet" th:href="@{/MainPageCss/mainPage.css}">
-    <script th:src="@{/MainPageCss/mainPage.js}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/MainCss/mainPage.css}">
 </head>
 <body>
 <!-- Navbar -->
-<nav class="navigationWrapper">
-    <div class="logoWrapper">
-        <span class="stylish">Stylish</span>
-        <span class="logo">Logo</span>
-    </div>
-    <ul class="navigation">
-        <li class="parent"><a class="link" href="#">Home</a></li>
-        <li>
+<section class="hero-section">
+    <nav class="navbar">
+        <div class="data-container">
+            <div class="logo-container">
+                <img th:src="@{/Logo/logo2.png}" alt="logo" class="Logo">
+                <h2 class="library-name">TekaLibrary</h2>
+            </div>
             <!--Search Bar-->
             <div class="search-bar">
                 <form th:action="@{/books/searchMainPage}" method="get">
@@ -25,75 +25,100 @@
                     <button type="submit">Search</button>
                 </form>
             </div>
-        </li>
-        <li class="parent"><a class="link" href="#">Account</a></li>
-        <li class="parent" id="clients">
-            <a class="link" href="#"><i class="fas fa-minus"></i> Clients <i class="fas fa-plus"></i></a>
-            <ul class="subnavigation">
-                <li><a class="link" th:href="@{/users/user-profile}">User Profile</a></li>
-                <li><a class="link" th:href="@{/MainPage/favourite_books.html}">Favourite Books</a></li>
-                <li><a class="link" th:href="@{/MainPage/order_history.html}">Order History</a></li>
-                <li>
-                    <form>
-                        <button type="submit" class="logout">Logout</button>
-                    </form>
-                </li>
-            </ul>
-        </li>
-        <li class="parent" id="services">
-            <a class="link" href="#"><i class="fas fa-minus"></i> Services <i class="fas fa-plus"></i></a>
-            <ul class="subnavigation">
-                <li><a class="link" href="#">Print Design</a></li>
-                <li><a class="link" href="#">Web Design</a></li>
-                <li><a class="link" href="#">Mobile App Development</a></li>
-            </ul>
-        </li>
-        <li class="parent"><a class="link" href="#">Contact</a></li>
-    </ul>
-</nav>
-
-
-<!-- Swiper for Books -->
-<div class="swiper-container">
-    <div class="swiper-wrapper">
-        <div class="swiper-slide" th:each="book : ${books}">
-            <div class="book-item">
-                <img th:src="@{${book.imagePath}}" alt="Book Image" class="book-image">
-                <div class="book-details">
-                    <h3 th:text="${book.title}"></h3>
-                    <p th:text="${book.author}"></p>
-                    <p th:text="${book.category}"></p>
-                    <a th:href="@{/MainPage/book-details/{id}(id=${book.bookId})}">
-                        <button class="details">Details</button>
-                    </a>
+            <div id="menu-time" class="menu-data animate__animated ">
+                <a th:href="@{/books/MainPage}">Home</a>
+                <a href="#footer">About Us</a>
+                <div class="dropdown-container">
+                    <a href="#" class="dropdown-trigger">Account &dtrif;</a>
+                    <ul class="dropdown">
+                        <li><a class="link" th:href="@{/users/user-profile}">User Profile</a></li>
+                        <li><a class="link" th:href="@{/users/favourite}">Favourite Books</a></li>
+                        <li><a class="link" th:href="@{/users/order-history}">Order History</a></li>
+                        <li th:if="${user != null}"><a class="link" th:href="@{/users/logout}">Log Out</a></li>
+                    </ul>
                 </div>
             </div>
+            <a id="Menu-bar" onclick="menubar()"><i class="size-icon fa-solid fa-bars"></i></a>
+        </div>
+    </nav>
+</section>
+
+<!-- Content Container -->
+<div class="content-container">
+    <!-- Newest Books Section -->
+    <div class="newest-category">
+        <h2>Newest Books</h2>
+        <div class="scroll-wrapper">
+            <div class="book-container" id="newest-books-container">
+                <div class="book-item" th:each="book : ${books}">
+                    <!-- Star Icon -->
+                    <i th:if="${user != null && user.favoriteBooks.contains(book)}"
+                       class="star-icon fa-solid fa-star"
+                       th:data-book-id="${book.bookId}"
+                       th:data-user-id="${user.userId}"
+                       onclick="toggleFavorite(this)"></i>
+                    <i th:unless="${user != null && user.favoriteBooks.contains(book)}"
+                       class="star-icon fa-regular fa-star"
+                       th:data-book-id="${book.bookId}"
+                       th:data-user-id="${user != null ? user.userId : ''}"
+                       onclick="toggleFavorite(this)"></i>
+
+                    <!-- Book Details -->
+                    <img th:src="@{${book.imagePath}}" alt="Book Image" class="book-image">
+                    <div class="book-details">
+                        <h3 th:text="${book.title}"></h3>
+                        <p th:text="${book.author}"></p>
+                        <p th:text="${book.category}"></p>
+                        <a th:href="@{/books/details/{id}(id=${book.bookId})}">
+                            <button class="details">Details</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <button class="scroll-arrow left" id="newest-prev">&larr;</button>
+            <button class="scroll-arrow right" id="newest-next">&rarr;</button>
         </div>
     </div>
-    <div class="swiper-pagination"></div>
-</div>
 
-<!-- Categories Section -->
-<div class="categories">
-    <h2>Fiction Books</h2>
-    <div class="category-books">
-        <div class="book-item" th:each="book : ${comedyBooks}">
-            <img th:src="@{${book.imagePath}}" alt="Book Image" class="book-image">
-            <div class="book-details">
-                <h3 th:text="${book.title}"></h3>
-                <p th:text="${book.author}"></p>
-                <p th:text="${book.category}"></p>
-                <a th:href="@{/MainPage/book-details/{id}(id=${book.bookId})}">
-                    <button class="details">Details</button>
-                </a>
+    <!-- Fiction Books Section -->
+    <div class="categories">
+        <h2>Fiction Books</h2>
+        <div class="scroll-wrapper">
+            <div class="category-books" id="fiction-books-container">
+                <div class="book-item" th:each="book : ${comedyBooks}">
+                    <!-- Star Icon -->
+                    <i th:if="${user != null && user.favoriteBooks.contains(book)}"
+                       class="star-icon fa-solid fa-star"
+                       th:data-book-id="${book.bookId}"
+                       th:data-user-id="${user.userId}"
+                       onclick="toggleFavorite(this)"></i>
+                    <i th:unless="${user != null && user.favoriteBooks.contains(book)}"
+                       class="star-icon fa-regular fa-star"
+                       th:data-book-id="${book.bookId}"
+                       th:data-user-id="${user != null ? user.userId : ''}"
+                       onclick="toggleFavorite(this)"></i>
+
+                    <!-- Book Details -->
+                    <img th:src="@{${book.imagePath}}" alt="Book Image" class="book-image">
+                    <div class="book-details">
+                        <h3 th:text="${book.title}"></h3>
+                        <p th:text="${book.author}"></p>
+                        <p th:text="${book.category}"></p>
+                        <a th:href="@{/books/details/{id}(id=${book.bookId})}">
+                            <button class="details">Details</button>
+                        </a>
+                    </div>
+                </div>
             </div>
+            <button class="scroll-arrow left" id="fiction-prev">&larr;</button>
+            <button class="scroll-arrow right" id="fiction-next">&rarr;</button>
         </div>
     </div>
 </div>
 
 <!-- Footer -->
 <footer>
-    <div class="footer-content">
+    <div class="footer-content" id="footer">
         <h3>About Us</h3>
         <p>Our goal is to provide you with the best books to read. We have a wide range of books from different genres.</p>
     </div>
@@ -114,5 +139,6 @@
         </ul>
     </div>
 </footer>
+<script th:src="@{/MainPageCss/mainPage.js}" defer></script>
 </body>
 </html>

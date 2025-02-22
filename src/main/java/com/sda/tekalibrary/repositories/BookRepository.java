@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
@@ -27,4 +28,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     //afisho te gjitha librat sipas kategorise Comedy
     @Query(value = "select b from Book b where b.category = 'Comedy'")
     List<Book> findBooksByCategoryComedy();
+
+    Optional<Book> findById(Long bookId);
+
 }

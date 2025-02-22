@@ -1,0 +1,175 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.hero-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar {
+    display: flex;
+    background-color: #1a1a1a;
+    padding: 15px 20px;
+    color: white;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.data-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.Logo {
+    width: 70px;
+    height: 70px;
+    border-radius: 10px;
+}
+
+.library-name {
+    font-size: 24px;
+    font-weight: 600;
+    color: #ff6060;
+    margin-left: 10px;
+}
+
+.menu-data {
+    display: flex;
+    align-items: center;
+}
+
+.menu-data a {
+    text-decoration: none;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 25px;
+    transition: background-color 0.3s ease;
+    margin: 0 5px;
+    font-weight: 500;
+}
+
+.menu-data a:hover {
+    background-color: #ff6060;
+    color: #1a1a1a;
+}
+
+#Menu-bar {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.content-container {
+    padding: 40px 20px;
+    background-color: #f4f4f4;
+}
+
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.book-item {
+    flex: 0 0 auto;
+    width: 200px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    position: relative;
+}
+
+.book-item:hover {
+    transform: translateY(-5px);
+}
+
+.book-image-container {
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+}
+
+.book-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+}
+
+.book-details {
+    padding: 15px;
+    text-align: center;
+}
+
+.book-details h3 {
+    font-size: 18px;
+    margin: 10px 0;
+    color: #1a1a1a;
+}
+
+.book-details p {
+    font-size: 14px;
+    color: #666;
+    margin: 5px 0;
+}
+
+.details-button {
+    padding: 8px 16px;
+    background-color: #ff6060;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.details-button:hover {
+    background-color: #ff4040;
+}
+
+.star-icon {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 24px;
+    color: gold;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.star-icon.fa-solid {
+    color: gold;
+}
+
+@media (max-width: 768px) {
+    .menu-data {
+        display: none;
+    }
+
+    #Menu-bar {
+        display: block;
+    }
+
+    .book-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+}

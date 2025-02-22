@@ -2,14 +2,9 @@ package com.sda.tekalibrary.services;
 
 import com.sda.tekalibrary.entities.Book;
 import com.sda.tekalibrary.repositories.BookRepository;
+import com.sda.tekalibrary.repositories.LoanedBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +20,12 @@ public class BookService {
     public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
+
+    @Autowired
+    private LoanedBookRepository loanedBookRepository;
+
+    @Autowired
+    private FavouriteBookService favouriteBookService;
 
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
@@ -57,6 +58,8 @@ public class BookService {
     }
 
     public void deleteBook(Long id) {
+        loanedBookRepository.deleteById(id);
+        favouriteBookService.removeFavoriteBookByBookId(id);
         bookRepository.deleteById(id);
     }
 
@@ -79,11 +82,12 @@ public class BookService {
     public List<Book> getNewestBooks() {
         return bookRepository.findAll().stream()
                 .sorted(Comparator.comparing(Book::getBookId).reversed())
-                .limit(3)
+                .limit(10)
                 .collect(Collectors.toList());
     }
 
     public List<Book> getBooksByCategoryComedy(){
         return bookRepository.findBooksByCategoryComedy();
     }
+
 }

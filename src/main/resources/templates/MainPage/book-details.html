@@ -1,10 +1,249 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Book Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .hero-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            display: flex;
+            background-color: #1a1a1a;
+            padding: 15px 20px;
+            color: white;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .data-container {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .Logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 10px;
+        }
+
+        .library-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ff6060;
+            margin-left: 10px;
+        }
+
+        .menu-data {
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-data a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            transition: background-color 0.3s ease;
+            margin: 0 5px;
+            font-weight: 500;
+        }
+
+        .menu-data a:hover {
+            background-color: #ff6060;
+            color: #1a1a1a;
+        }
+
+        #Menu-bar {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .content-container {
+            padding: 40px 20px;
+            background-color: #f4f4f4;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .book-details-container {
+            display: flex;
+            gap: 40px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-image-container {
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .book-image {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .book-info {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .book-info h1 {
+            font-size: 32px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .book-info p {
+            font-size: 16px;
+            color: #555;
+            margin: 5px 0;
+        }
+
+        .book-info p strong {
+            color: #1a1a1a;
+        }
+
+        .loan-button {
+            padding: 12px 24px;
+            background-color: #ff6060;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+            align-self: flex-start;
+        }
+
+        .loan-button:hover {
+            background-color: #ff4040;
+        }
+
+        @media (max-width: 768px) {
+            .book-details-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .book-image-container {
+                max-width: 100%;
+            }
+
+            .book-info {
+                text-align: center;
+            }
+
+            .loan-button {
+                align-self: center;
+            }
+        }
+        .unavailable-message {
+            color: #ff6060;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
+<!-- Navbar -->
+<section class="hero-section">
+    <nav class="navbar">
+        <div class="data-container">
+            <div class="logo-container">
+                <img th:src="@{/Logo/logo2.png}" alt="logo" class="Logo">
+                <h2 class="library-name">TekaLibrary</h2>
+            </div>
+            <div class="menu-data">
+                <a th:href="@{/books/MainPage}">Home</a>
+                <a th:href="@{/users/user-profile}">User Profile</a>
+            </div>
+            <a id="Menu-bar"><i class="fa-solid fa-bars"></i></a>
+        </div>
+    </nav>
+</section>
+<!-- Book Details -->
+<div class="content-container">
+    <div class="book-details-container">
+        <!-- Book Image -->
+        <div class="book-image-container">
+            <img th:src="@{${book.imagePath}}" alt="Book Image" class="book-image">
+        </div>
 
+        <!-- Book Information -->
+        <div class="book-info">
+            <h1 th:text="${book.title}"></h1>
+            <p><strong>Author:</strong> <span th:text="${book.author}"></span></p>
+            <p><strong>Description:</strong> <span th:text="${book.description}"></span></p>
+            <p><strong>Category:</strong> <span th:text="${book.category}"></span></p>
+            <p><strong>ISBN:</strong> <span th:text="${book.isbn}"></span></p>
+            <p><strong>Quantity Available:</strong> <span th:text="${book.quantity}"></span></p>
+            <p><strong>Price:</strong> $<span th:text="${book.price}"></span></p>
+
+            <!-- Loan Book Button -->
+            <div th:if="${book.quantity > 0}">
+                <div th:if="${user != null && !hasLoaned}">
+                    <button class="loan-button" th:onclick="'loanBook(' + ${book.bookId} + ')'">Loan Book</button>
+                </div>
+                <div th:if="${user != null && hasLoaned}">
+                    <p class="unavailable-message">You have already loaned this book.</p>
+                </div>
+            </div>
+            <div th:if="${book.quantity <= 0}">
+                <p class="unavailable-message">This book is currently unavailable.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<<script>
+    function loanBook(bookId) {
+        fetch(`/books/loan/${bookId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert("Book loaned successfully!");
+                    window.location.reload(); // Reload the page to reflect changes
+                } else {
+                    response.text().then(message => {
+                        alert(message); // Show error message from the server
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Error loaning the book:", error);
+                alert("An error occurred. Please try again later.");
+            });
+    }
+</script>
 </body>
 </html>

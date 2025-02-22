@@ -3,6 +3,9 @@ package com.sda.tekalibrary.entities;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
@@ -10,26 +13,24 @@ import lombok.NoArgsConstructor;
 @Table(name = "loaned_books")
 public class LoanedBook {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "loaned_book_id", nullable = false)
     private long loanedId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
-    @Column(name = "loan_date", nullable = false)
-    private String loanDate;
+    @CreationTimestamp
+    @Column(name = "loan_date", nullable = false, updatable = false)
+    private LocalDate loanDate;
 
     @Column(name = "return_date", nullable = false)
-    private String returnDate;
-
-    @Column(name = "book_title", nullable = false)
-    private String bookTitle;
+    private LocalDate returnDate;
 
     public long getLoanedId() {
         return loanedId;
@@ -55,27 +56,19 @@ public class LoanedBook {
         this.book = book;
     }
 
-    public String getLoanDate() {
+    public LocalDate getLoanDate() {
         return loanDate;
     }
 
-    public void setLoanDate(String loanDate) {
+    public void setLoanDate(LocalDate loanDate) {
         this.loanDate = loanDate;
     }
 
-    public String getReturnDate() {
+    public LocalDate getReturnDate() {
         return returnDate;
     }
 
-    public void setReturnDate(String returnDate) {
+    public void setReturnDate(LocalDate returnDate) {
         this.returnDate = returnDate;
-    }
-
-    public String getBookTitle() {
-        return bookTitle;
-    }
-
-    public void setBookTitle(String bookTitle) {
-        this.bookTitle = bookTitle;
     }
 }

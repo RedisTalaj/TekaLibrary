@@ -1,17 +1,30 @@
 package com.sda.tekalibrary.services;
 
+import com.sda.tekalibrary.entities.Book;
+import com.sda.tekalibrary.entities.LoanedBook;
 import com.sda.tekalibrary.entities.User;
+import com.sda.tekalibrary.repositories.BookRepository;
+import com.sda.tekalibrary.repositories.LoanedBookRepository;
 import com.sda.tekalibrary.repositories.UserRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Transactional
 public class UserService {
 
     @Autowired
     private final UserRepository userRepository;
+
+    @Autowired
+    private BookService bookService;
+
+    @Autowired
+    private LoanedBookRepository loanedBookRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -68,5 +81,42 @@ public class UserService {
     public User getUserProfile(String email){
         User user = userRepository.findByEmail(email);
         return user;
+    }
+
+    public User getUserByUsername(String username){
+        return userRepository.getUserByUsername(username);
+    }
+
+    @Transactional
+    public void addBookToFavorites(Long userId, Long bookId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Book book = bookService.getBookById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+
+        user.getFavoriteBooks().add(book);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void removeBookFromFavorites(Long userId, Long bookId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Book book = bookService.getBookById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+
+        user.getFavoriteBooks().remove(book);
+        userRepository.save(user);
+    }
+
+    @Transactional(readOnly = true)
+    public User getUserWithFavoriteBooks(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<LoanedBook> getLoanedBooksByUser(Long userId) {
+        return loanedBookRepository.findByUserUserId(userId);
     }
 }

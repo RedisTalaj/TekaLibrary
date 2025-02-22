@@ -1,10 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Favourite Books</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" th:href="@{/MainPageCss/favouriteBooks.css}">
 </head>
 <body>
+<!-- Navbar -->
+<section class="hero-section">
+    <nav class="navbar">
+        <div class="data-container">
+            <div class="logo-container">
+                <img th:src="@{/Logo/logo2.png}" alt="logo" class="Logo">
+                <h2 class="library-name">TekaLibrary</h2>
+            </div>
+            <div class="menu-data">
+                <a th:href="@{/books/MainPage}">Home</a>
+                <a th:href="@{/users/user-profile}">User Profile</a>
+            </div>
+            <a id="Menu-bar"><i class="fa-solid fa-bars"></i></a>
+        </div>
+    </nav>
+</section>
 
+<!-- Display favorite books for the logged-in user -->
+<div class="content-container" th:if="${user != null}">
+    <h1>Your Favorite Books</h1>
+    <div class="book-grid">
+        <div class="book-item" th:each="book : ${user.favoriteBooks}">
+            <!-- Star icon to toggle favorite status -->
+            <i th:class="'star-icon fa-solid fa-star'"
+               th:data-book-id="${book.bookId}"
+               th:data-user-id="${user.userId}"
+               onclick="toggleFavorite(this)"></i>
+
+            <!-- Book Image -->
+            <div class="book-image-container">
+                <img th:src="@{${book.imagePath}}" alt="Book Image" class="book-image">
+            </div>
+
+            <!-- Book Details -->
+            <div class="book-details">
+                <h3 th:text="${book.title}">Titulli i Librit</h3>
+                <p th:text="${book.description}">Përshkrimi i librit</p>
+                <a th:href="@{/books/details/{id}(id=${book.bookId})}">
+                    <button class="details-button">Details</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleFavorite(element) {
+        const bookId = element.getAttribute('data-book-id');
+        const userId = element.getAttribute('data-user-id');
+
+        const isFavorite = element.classList.contains('fa-solid');
+
+        fetch(`/users/favourite/toggle/${bookId}?userId=${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    if (isFavorite) {
+                        element.classList.remove('fa-solid');
+                        element.classList.add('fa-regular');
+                        alert("Book removed from favorites!");
+                        window.location.reload();
+                    } else {
+                        element.classList.remove('fa-regular');
+                        element.classList.add('fa-solid');
+                        alert("Book added to favorites!");
+                        window.location.reload();
+                    }
+                } else {
+                    console.error("Error toggling favorite:", response.status);
+                    alert("Error toggling favorite. Please try again.");
+                }
+            })
+            .catch(error => {
+                console.error("Error toggling favorite:", error);
+                alert("An error occurred. Please try again later.");
+            });
+    }
+</script>
 </body>
 </html>

@@ -1,13 +1,18 @@
 package com.sda.tekalibrary.controllers;
 
+import com.sda.tekalibrary.entities.Book;
+import com.sda.tekalibrary.entities.LoanedBook;
 import com.sda.tekalibrary.entities.User;
+import com.sda.tekalibrary.services.BookService;
+import com.sda.tekalibrary.services.LoanedBookService;
 import com.sda.tekalibrary.services.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -18,6 +23,12 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private BookService bookService;
+
+    @Autowired
+    private LoanedBookService loanedBookService;
 
     @GetMapping
     public String getAllUsers(Model model){
@@ -78,7 +89,7 @@ public class UserController {
                     user.setRole(logedInUser.getRole());
                     if (logedInUser.getRole().equals("Admin")) {
                         session.setAttribute("user", logedInUser);
-                        return "redirect:/users";
+                        return "redirect:/users/user-profile";
                     } else {
                         //do dergohet te dashboard, por per placeholder vendosim login page
                         redirectAttributes.addFlashAttribute("errorMessageEmailOrPassword",
@@ -177,5 +188,84 @@ public class UserController {
         }
         model.addAttribute("user", user);
         return "MainPage/userAccount";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        session.invalidate();
+        return "redirect:/users/login";
+    }
+
+    @GetMapping("/favourite")
+    public String getFavouriteBooks(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/users/login";
+        }
+
+        User userWithFavorites = userService.getUserWithFavoriteBooks(user.getUserId());
+        model.addAttribute("user", userWithFavorites);
+
+        List<Book> books = bookService.getAllBooks();
+        model.addAttribute("books", books);
+
+        return "MainPage/favourite_books";
+    }
+
+    @PostMapping("/favourite/toggle/{bookId}")
+    @ResponseBody
+    public ResponseEntity<String> toggleFavorite(@PathVariable Long bookId, @RequestParam Long userId) {
+        try {
+            User user = userService.getUserWithFavoriteBooks(userId);
+            boolean isFavorite = user.getFavoriteBooks().stream()
+                    .anyMatch(book -> book.getBookId() == bookId);
+
+            if (isFavorite) {
+                userService.removeBookFromFavorites(userId, bookId);
+                return ResponseEntity.ok("Book removed from favorites");
+            } else {
+                userService.addBookToFavorites(userId, bookId);
+                return ResponseEntity.ok("Book added to favorites");
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/favourite/add/{bookId}")
+    @ResponseBody
+    public ResponseEntity<String> addToFavorites(@PathVariable Long bookId, @RequestParam Long userId) {
+        try {
+            userService.addBookToFavorites(userId, bookId);
+            return ResponseEntity.ok("Book added to favorites");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/favourite/remove/{bookId}")
+    @ResponseBody
+    public ResponseEntity<String> removeFromFavorites(@PathVariable Long bookId, @RequestParam Long userId) {
+        try {
+            userService.removeBookFromFavorites(userId, bookId);
+            return ResponseEntity.ok("Book removed from favorites");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/order-history")
+    public String getOrderHistory(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/users/login";
+        }
+
+        List<LoanedBook> loanedBooks = loanedBookService.getLoanedBooksByUser(user.getUserId());
+        model.addAttribute("loanedBooks", loanedBooks);
+
+        return "MainPage/order_history";
     }
 }

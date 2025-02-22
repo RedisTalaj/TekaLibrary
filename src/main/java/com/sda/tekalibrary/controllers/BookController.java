@@ -1,8 +1,15 @@
 package com.sda.tekalibrary.controllers;
 
 import com.sda.tekalibrary.entities.Book;
+import com.sda.tekalibrary.entities.LoanedBook;
+import com.sda.tekalibrary.entities.User;
 import com.sda.tekalibrary.services.BookService;
+import com.sda.tekalibrary.services.LoanedBookService;
+import com.sda.tekalibrary.services.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +21,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/books")
@@ -22,6 +31,12 @@ public class BookController {
 
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private LoanedBookService loanedBookService;
 
     @GetMapping
     public String getAllBooks(Model model){
@@ -56,7 +71,6 @@ public class BookController {
         book.setIsbn(isbn);
         book.setQuantity(quantity);
         book.setPrice(price);
-
 
         if (bookService.getBookByIsbn(isbn) != null && book.getIsbn().equals(bookService.getBookByIsbn(isbn).getIsbn())) {
             model.addAttribute("errorMessage", "This book already exists in the library");
@@ -93,25 +107,18 @@ public class BookController {
 
     @PostMapping("/delete/{id}")
     public String deleteBook(@PathVariable Long id) throws IOException {
-        // Merr librin nga databaza
         Book book = bookService.getBookById(id).get();
 
-        // Fshi imazhin nëse ekziston
         if (book.getImagePath() != null && !book.getImagePath().isEmpty()) {
             Path filePath = Paths.get("src/main/resources/static" + book.getImagePath());
             if (Files.exists(filePath)) {
                 Files.delete(filePath);
             }
         }
-
-        // Fshi librin nga databaza
         bookService.deleteBook(id);
-
-        // Ridrejto në faqen kryesore
         return "redirect:/books";
     }
 
-    //Admin Page - Search
     @GetMapping("/search")
     public String goToSearch(@RequestParam("keyword") String keyword,Model model){
         List<Book> books = bookService.searchBookByAuthorOrTitle(keyword);
@@ -124,7 +131,6 @@ public class BookController {
         return "Books/bookCenter";
     }
 
-    //Main Page -Search
     @GetMapping("/searchMainPage")
     public String searchBooks(@RequestParam("keyword") String keyword, Model model){
         List<Book> books = bookService.searchBookByAuthorOrTitle(keyword);
@@ -138,15 +144,72 @@ public class BookController {
     }
 
     @GetMapping("/MainPage")
-    public String goToCategory(Model model){
-        //10 Newest Books
-        List<Book> newestBooks = bookService.getNewestBooks();
-        model.addAttribute("books", newestBooks);
+    public String getMainPage(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            User userWithFavorites = userService.getUserWithFavoriteBooks(user.getUserId());
+            model.addAttribute("user", userWithFavorites);
+        } else {
+            model.addAttribute("user", null);
+        }
 
-        //Books by category = Comedy
+        List<Book> books = bookService.getAllBooks();
         List<Book> comedyBooks = bookService.getBooksByCategoryComedy();
+        model.addAttribute("books", books);
         model.addAttribute("comedyBooks", comedyBooks);
+
         return "MainPage/main_page";
     }
-}
 
+    @GetMapping("/details/{id}")
+    public String getBookDetails(@PathVariable Long id, Model model, HttpSession httpSession) {
+        Optional<Book> bookOptional = bookService.getBookById(id);
+        User user = (User) httpSession.getAttribute("user");
+        if (bookOptional.isPresent()) {
+            Book book = bookOptional.get();
+            boolean hasLoaned = loanedBookService.hasUserLoanedBook(user, book);
+            model.addAttribute("book", book);
+            model.addAttribute("user", user);
+            model.addAttribute("hasLoaned", hasLoaned);
+            return "MainPage/book-details";
+        } else {
+            return "redirect:/books";
+        }
+    }
+
+    @PostMapping("/loan/{bookId}")
+    public ResponseEntity<String> loanBook(@PathVariable Long bookId, HttpSession session) {
+        try {
+            User user = (User) session.getAttribute("user");
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in");
+            }
+
+            Optional<Book> bookOptional = bookService.getBookById(bookId);
+            if (bookOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found");
+            }
+
+            Book book = bookOptional.get();
+            if (book.getQuantity() <= 0) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Book is not available for loan");
+            }
+
+            LoanedBook loanedBook = new LoanedBook();
+            loanedBook.setUser(user);
+            loanedBook.setBook(book);
+            loanedBook.setLoanDate(LocalDate.now());
+            loanedBook.setReturnDate(LocalDate.now().plusDays(7));
+
+            loanedBookService.saveLoanedBook(loanedBook);
+
+            book.setQuantity(book.getQuantity() - 1);
+            bookService.updateBook(bookId, book);
+
+            return ResponseEntity.ok("Book loaned successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+    }
+}

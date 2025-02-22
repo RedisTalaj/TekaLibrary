@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -16,5 +17,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value="select u from User u where u.username like %:keyword%")
     List<User> searchByUsername(String keyword);
 
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
+
+    User getUserByUsername(String username);
+
+    @Query("SELECT u FROM User u JOIN FETCH u.favoriteBooks WHERE u.userId = :userId")
+    Optional<User> findByIdWithFavoriteBooks(@Param("userId") Long userId);
 }
