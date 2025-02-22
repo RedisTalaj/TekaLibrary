@@ -6,6 +6,7 @@ import com.sda.tekalibrary.entities.User;
 import com.sda.tekalibrary.repositories.BookRepository;
 import com.sda.tekalibrary.repositories.LoanedBookRepository;
 import com.sda.tekalibrary.repositories.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,9 @@ public class UserService {
 
     @Autowired
     private LoanedBookRepository loanedBookRepository;
+
+    @Autowired
+    private FavouriteBookService favouriteBookService;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -58,6 +62,8 @@ public class UserService {
     }
 
     public void deleteUser(Long userId){
+        loanedBookRepository.deleteById(userId);
+        favouriteBookService.removeFavoriteBookByUserId(userId);
         userRepository.deleteById(userId);
     }
 
@@ -118,5 +124,23 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<LoanedBook> getLoanedBooksByUser(Long userId) {
         return loanedBookRepository.findByUserUserId(userId);
+    }
+
+    public void editUser(User editUser, HttpSession session){
+        User sessionUser = (User) session.getAttribute("user");
+        if(sessionUser.getRole().equals("Admin")){
+            sessionUser.setRole("Admin");
+        }else if(sessionUser.getRole().equals("User")){
+            sessionUser.setRole("User");
+        }else if(sessionUser.getStatus().equals("Acctive")){
+            sessionUser.setStatus("Active");
+        }
+        sessionUser.setUsername(editUser.getUsername());
+        sessionUser.setPassword(editUser.getPassword());
+        sessionUser.setEmail(editUser.getEmail());
+        sessionUser.setAddress(editUser.getAddress());
+        sessionUser.setAge(editUser.getAge());
+        sessionUser.setLastname(editUser.getLastname());
+        userRepository.save(sessionUser);
     }
 }

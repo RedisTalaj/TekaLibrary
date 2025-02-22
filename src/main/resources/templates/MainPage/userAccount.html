@@ -154,7 +154,7 @@
             <p>Password: <span th:text="${user.password}"></span></p>
         </div>
         <div class="actions">
-            <a th:href="@{/books/update/{id}(id=${user.userId})}">
+            <a th:href="@{/users/edit/{id}(id=${user.userId})}">
                 <button class="update">Edit Profile</button>
             </a>
             <a th:href="@{/users/delete/{id}(id=${user.userId})}">

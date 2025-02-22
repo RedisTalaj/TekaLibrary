@@ -14,4 +14,9 @@ public class FavouriteBookService {
     public void removeFavoriteBookByBookId(Long bookId) {
         favouriteBookRepository.deleteByBookId(bookId);
     }
+
+    @Transactional
+    public void removeFavoriteBookByUserId(Long userId) {
+        favouriteBookRepository.deleteByUserId(userId);
+    }
 }

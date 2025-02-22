@@ -23,4 +23,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u JOIN FETCH u.favoriteBooks WHERE u.userId = :userId")
     Optional<User> findByIdWithFavoriteBooks(@Param("userId") Long userId);
+
 }

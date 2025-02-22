@@ -12,4 +12,8 @@ public interface FavouriteBookRepository extends JpaRepository<FavoriteBook, Lon
     @Modifying
     @Query("DELETE FROM FavoriteBook fb WHERE fb.id.bookId = :bookId")
     void deleteByBookId(@Param("bookId") Long bookId);
+
+    @Modifying
+    @Query("DELETE FROM FavoriteBook fb WHERE fb.id.userId = :userId")
+    void deleteByUserId(@Param("userId") Long userId);
 }

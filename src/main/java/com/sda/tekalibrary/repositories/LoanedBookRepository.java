@@ -14,4 +14,5 @@ public interface LoanedBookRepository extends JpaRepository<LoanedBook, Long> {
 
     boolean existsByUserAndBook(User user, Book book);
     void deleteByBook(Book book);
+    void deleteByUser(User user);
 }

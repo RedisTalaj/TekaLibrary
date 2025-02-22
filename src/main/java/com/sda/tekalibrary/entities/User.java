@@ -26,6 +26,9 @@ public class User {
     )
     private Set<Book> favoriteBooks = new HashSet<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LoanedBook> loanedBooks;
+
     @Column(name = "username")
     private String username;
 
@@ -128,5 +131,13 @@ public class User {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public List<LoanedBook> getLoanedBooks() {
+        return loanedBooks;
+    }
+
+    public void setLoanedBooks(List<LoanedBook> loanedBooks) {
+        this.loanedBooks = loanedBooks;
     }
 }

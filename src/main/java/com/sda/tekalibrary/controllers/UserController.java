@@ -268,4 +268,35 @@ public class UserController {
 
         return "MainPage/order_history";
     }
+
+    //User profile edit
+    @GetMapping("/edit/{id}")
+    public String goEditUser(Model model, @PathVariable Long id){
+        model.addAttribute("user", userService.getUserById(id));
+        return "MainPage/userAccountEdit";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String editUser(@ModelAttribute User user, @PathVariable Long id, Model model, HttpSession httpSession){
+        User userExists = userService.getUserByEmail(user.getEmail());
+        User userLoggedIn = (User) httpSession.getAttribute("user");
+        if (userExists != null && userExists.getEmail().equals(user.getEmail()) && !userLoggedIn.getEmail().equals(user.getEmail())) {
+            model.addAttribute("errorMessage", "Email already in use");
+            return "MainPage/userAccountEdit";
+        }
+        if(user.getPassword().length() < 7){
+            model.addAttribute("errorMessage", "Password must be at least 7 characters long.");
+            return "MainPage/userAccountEdit";
+        }
+        if (!user.getPassword().matches(".*[A-Z].*")) {
+            model.addAttribute("errorMessage", "Password must contain at least one uppercase letter.");
+            return "MainPage/userAccountEdit";
+        }
+        if(userLoggedIn.getEmail().equals(user.getEmail())){
+            model.addAttribute("successMessage", "User updated successfully");
+            userService.editUser(user, httpSession);
+            return "redirect:/users/user-profile";
+        }
+        return "redirect:/users/user-profile";
+    }
 }
