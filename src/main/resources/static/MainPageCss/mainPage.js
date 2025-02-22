@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Auto-scroll for newest books
+    // Auto-scroll for newest books (first category only)
     const newestContainer = document.getElementById('newest-books-container');
     let scrollInterval;
 
@@ -41,64 +41,43 @@ document.addEventListener('DOMContentLoaded', function () {
         startAutoScroll();
     }
 
-    // Horizontal scroll for all sections
+    // Manual scroll for other categories
     function setupHorizontalScroll(containerId, prevButtonId, nextButtonId) {
         const container = document.getElementById(containerId);
         const prevButton = document.getElementById(prevButtonId);
         const nextButton = document.getElementById(nextButtonId);
 
-        if (!container || !prevButton || !nextButton) return;
+        console.log(`Container: ${containerId}`, container); // Debug
+        console.log(`Prev Button: ${prevButtonId}`, prevButton); // Debug
+        console.log(`Next Button: ${nextButtonId}`, nextButton); // Debug
+
+        if (!container || !prevButton || !nextButton) {
+            console.error("One or more elements are missing.");
+            return;
+        }
 
         const scrollAmount = 300;
 
         prevButton.addEventListener('click', () => {
+            console.log("Prev button clicked"); // Debug
             container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
         });
 
         nextButton.addEventListener('click', () => {
+            console.log("Next button clicked"); // Debug
             container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
         });
     }
 
+    // Setup manual scroll for all other categories
     setupHorizontalScroll('newest-books-container', 'newest-prev', 'newest-next');
+    setupHorizontalScroll('all-books-container', 'all-prev', 'all-next');
+    setupHorizontalScroll('fiction1-books-container', 'fiction1-prev', 'fiction1-next');
+    setupHorizontalScroll('horror-books-container', 'horror-prev', 'horror-next');
     setupHorizontalScroll('fiction-books-container', 'fiction-prev', 'fiction-next');
 });
 
-function addToFavorites(element) {
-    const bookId = element.getAttribute('data-book-id'); // Get the book ID from the data attribute
-    const userId = element.getAttribute('data-user-id');
-
-    if (!bookId || !userId) {
-        console.error("Book ID or User ID is missing.");
-        return;
-    }
-
-    // Send an AJAX request to add the book to favorites
-    fetch(`/users/favourite/add/${bookId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').getAttribute('content') // Add CSRF token
-        },
-        body: JSON.stringify({ userId: userId })
-    })
-        .then(response => {
-            if (response.ok) {
-                // Update the UI to reflect the book has been added to favorites
-                element.classList.remove('fa-regular'); // Remove the regular star
-                element.classList.add('fa-solid'); // Add the solid star
-                alert("Book added to favorites!");
-            } else {
-                // Handle errors (e.g., display an error message)
-                console.error("Error adding to favorites:", response.status);
-                alert("Error adding to faavorites. Please try again.");
-            }
-        })
-        .catch(error => {
-            console.error("Error adding to favorites:", error);
-            alert("An error occurred. Please try again later.");
-        });
-}
+// Toggle favorite functionality
 function toggleFavorite(element) {
     console.log("toggleFavorite called"); // Debug statement
     if (!element) {

@@ -27,13 +27,16 @@ public class Book {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FavoriteBook> favoriteBooks;
 
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews;
+
     @Column(name = "title", nullable = false)
     private String title;
 
     @Column(name = "author", nullable = false)
     private String author;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = false, length = 2000)
     private String description;
 
     @Column(name = "isbn", nullable = false)
@@ -146,5 +149,13 @@ public class Book {
 
     public void setFavoriteBooks(List<FavoriteBook> favoriteBooks) {
         this.favoriteBooks = favoriteBooks;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 }

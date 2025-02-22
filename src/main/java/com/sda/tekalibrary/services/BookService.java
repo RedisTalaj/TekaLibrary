@@ -40,20 +40,18 @@ public class BookService {
     }
 
     public void updateBook(Long id, Book updatedBook) {
-        Optional<Book> bookOptional = bookRepository.findById(id);
-        if (bookOptional.isPresent()) {
-            Book book = bookOptional.get();
+        Optional<Book> existingBook = bookRepository.findById(id);
+        if (existingBook.isPresent()) {
+            Book book = existingBook.get();
             book.setTitle(updatedBook.getTitle());
             book.setAuthor(updatedBook.getAuthor());
+            book.setCategory(updatedBook.getCategory());
             book.setDescription(updatedBook.getDescription());
             book.setIsbn(updatedBook.getIsbn());
-            book.setCategory(updatedBook.getCategory());
-            book.setImagePath(updatedBook.getImagePath());
             book.setQuantity(updatedBook.getQuantity());
             book.setPrice(updatedBook.getPrice());
+            book.setImagePath(updatedBook.getImagePath()); // Update the image path
             bookRepository.save(book);
-        } else {
-            throw new RuntimeException("Book with ID " + id + " not found.");
         }
     }
 
@@ -75,19 +73,31 @@ public class BookService {
         return bookRepository.findByIsbn(isbn);
     }
 
-    public List<Book> searchBookByAuthorOrTitle(String keyword){
+    public List<Book> searchBookByAuthorOrTitle(String keyword) {
         return bookRepository.searchByAuthorOrTitle(keyword);
     }
 
     public List<Book> getNewestBooks() {
-        return bookRepository.findAll().stream()
-                .sorted(Comparator.comparing(Book::getBookId).reversed())
-                .limit(10)
-                .collect(Collectors.toList());
+        return bookRepository.findTop10ByOrderByBookIdDesc();
     }
 
     public List<Book> getBooksByCategoryComedy(){
         return bookRepository.findBooksByCategoryComedy();
     }
 
+    public List<Book> getBooksByCategoryDrama(){
+        return bookRepository.findBooksByCategoryDrama();
+    }
+
+    public List<Book> getBooksByCategoryFiction(){
+        return bookRepository.findBooksByCategoryFiction();
+    }
+
+    public List<Book> getBooksByCategoryHorror(){
+        return bookRepository.findBooksByCategoryHorror();
+    }
+
+    public List<Book> getBooksByCategoryNonFiction(){
+        return bookRepository.findBooksByCategoryNonFiction();
+    }
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/users")
@@ -89,13 +90,13 @@ public class UserController {
                     user.setRole(logedInUser.getRole());
                     if (logedInUser.getRole().equals("Admin")) {
                         session.setAttribute("user", logedInUser);
-                        return "redirect:/users/user-profile";
+                        return "redirect:/books/MainPage";
                     } else {
                         //do dergohet te dashboard, por per placeholder vendosim login page
                         redirectAttributes.addFlashAttribute("errorMessageEmailOrPassword",
                                 "Logged in successfully");
                         session.setAttribute("user", logedInUser);
-                        return "redirect:/users/user-profile";
+                        return "redirect:/books/MainPage";
                     }
                 }
             }
@@ -298,5 +299,12 @@ public class UserController {
             return "redirect:/users/user-profile";
         }
         return "redirect:/users/user-profile";
+    }
+
+    @GetMapping("/deleteAccount/{id}")
+    public String goToDeleteAccount(Model model, @ModelAttribute("user") User user, @PathVariable Long id){
+        userService.deleteUser(id);
+        model.addAttribute("user", new User());
+        return "Login/login";
     }
 }

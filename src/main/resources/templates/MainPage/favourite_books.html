@@ -43,7 +43,8 @@
             <!-- Book Details -->
             <div class="book-details">
                 <h3 th:text="${book.title}">Titulli i Librit</h3>
-                <p th:text="${book.description}">Përshkrimi i librit</p>
+                <p th:text="${book.author}">Autori i Librit</p>
+                <p th:text="${book.category}">Kategoria e Librit</p>
                 <a th:href="@{/books/details/{id}(id=${book.bookId})}">
                     <button class="details-button">Details</button>
                 </a>

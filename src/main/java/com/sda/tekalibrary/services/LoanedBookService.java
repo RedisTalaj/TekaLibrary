@@ -27,4 +27,8 @@ public class LoanedBookService {
     public boolean hasUserLoanedBook(User user, Book book) {
         return loanedBookRepository.existsByUserAndBook(user, book);
     }
+
+    public boolean existsByUserAndBook(User user, Book book) {
+        return loanedBookRepository.existsByUserAndBook(user, book);
+    }
 }
