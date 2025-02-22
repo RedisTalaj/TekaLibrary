@@ -25,7 +25,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -289,28 +288,25 @@ public class BookController {
                             @RequestParam String comment,
                             HttpSession session,
                             RedirectAttributes redirectAttributes) {
-        // Merr përdoruesin nga session
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            return "redirect:/users/login"; // Ridrejto nëse përdoruesi nuk është i kyçur
+            return "redirect:/users/login";
         }
 
         // Kontrollo nëse libri ekziston
         Optional<Book> bookOptional = bookRepository.findById(bookId);
         if (!bookOptional.isPresent()) {
-            return "redirect:/books/MainPage"; // Ridrejto nëse libri nuk gjendet
+            return "redirect:/books/MainPage";
         }
 
         Book book = bookOptional.get();
 
-        // Kontrollo nëse përdoruesi ka një review ekzistues për këtë libër
         Optional<Review> existingReview = reviewRepository.findByUserAndBook(user, book);
         if (existingReview.isPresent()) {
             redirectAttributes.addFlashAttribute("errorMessage", "You have already submitted a review for this book.");
-            return "redirect:/books/details/" + bookId; // Ridrejto nëse përdoruesi ka një review ekzistues
+            return "redirect:/books/details/" + bookId;
         }
 
-        // Krijo një review të ri
         Review review = new Review();
         review.setBook(book);
         review.setUser(user);
@@ -318,7 +314,6 @@ public class BookController {
         review.setReviewTitle(reviewTitle);
         review.setComment(comment);
 
-        // Ruaj review-n në bazën e të dhënave
         reviewRepository.save(review);
 
         redirectAttributes.addFlashAttribute("successMessage", "Review submitted successfully!");

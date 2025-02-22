@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Update Profile</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/UserCss/update.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/MainCss/accountEdit.css}">
     <style>
         .alert {
             padding: 12px;
@@ -47,7 +47,7 @@
     <br>
     <button type="submit">Update</button>
     <br>
-    <a th:href="@{/users}" class="cancel-button">Cancel</a>
+    <a th:href="@{/users/user-profile}" class="cancel-button">Cancel</a>
     <!-- Error Message -->
     <div th:if="${errorMessage}" class="alert alert-danger">
         <span th:text="${errorMessage}"></span>

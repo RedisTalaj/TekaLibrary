@@ -157,7 +157,7 @@
             <a th:href="@{/users/edit/{id}(id=${user.userId})}">
                 <button class="update">Edit Profile</button>
             </a>
-            <a th:href="@{/users/deleteAccount/{id}(id=${user.userId})}">
+            <a th:href="@{/users/deleteAccount/{id}(id=${user.userId})}"  onclick="return confirmDelete()">
                 <button class="delete">Delete Profile</button>
             </a>
         </div>
@@ -169,4 +169,14 @@
     </div>
 </div>
 </body>
+<script>
+    function confirmDelete() {
+        const confirmation = confirm("Are you sure you want to delete your profile? This action cannot be undone.");
+        if (confirmation) {
+            return true; // Proceed with the deletion
+        } else {
+            return false; // Cancel the deletion
+        }
+    }
+</script>
 </html>

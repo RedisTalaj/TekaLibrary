@@ -3,12 +3,11 @@ package com.sda.tekalibrary.services;
 import com.sda.tekalibrary.entities.Book;
 import com.sda.tekalibrary.repositories.BookRepository;
 import com.sda.tekalibrary.repositories.LoanedBookRepository;
+import com.sda.tekalibrary.repositories.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -26,6 +25,9 @@ public class BookService {
 
     @Autowired
     private FavouriteBookService favouriteBookService;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
@@ -56,6 +58,7 @@ public class BookService {
     }
 
     public void deleteBook(Long id) {
+        reviewRepository.deleteById(id);
         loanedBookRepository.deleteById(id);
         favouriteBookService.removeFavoriteBookByBookId(id);
         bookRepository.deleteById(id);

@@ -5,6 +5,7 @@ import com.sda.tekalibrary.entities.LoanedBook;
 import com.sda.tekalibrary.entities.User;
 import com.sda.tekalibrary.repositories.BookRepository;
 import com.sda.tekalibrary.repositories.LoanedBookRepository;
+import com.sda.tekalibrary.repositories.ReviewRepository;
 import com.sda.tekalibrary.repositories.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,9 @@ public class UserService {
 
     @Autowired
     private FavouriteBookService favouriteBookService;
+
+    @Autowired
+    private ReviewService reviewService;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -63,6 +67,7 @@ public class UserService {
 
     public void deleteUser(Long userId){
         loanedBookRepository.deleteById(userId);
+        reviewService.removeReviewUserByUserId(userId);
         favouriteBookService.removeFavoriteBookByUserId(userId);
         userRepository.deleteById(userId);
     }
