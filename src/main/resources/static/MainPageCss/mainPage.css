@@ -12,12 +12,13 @@
 
 .navbar {
     display: flex;
-    background-color: #1a1a1a;
+    /*background-color: #1a1a1a;*/
     padding: 15px 20px;
     color: white;
     width: 100%;
     align-items: center;
     justify-content: center;
+    margin: 10px 10px;
 }
 
 .data-container {
@@ -39,11 +40,14 @@
     border-radius: 10px;
 }
 
+
 .library-name {
-    font-size: 24px;
-    font-weight: 600;
-    color: #ff6060;
-    margin-left: 10px;
+    font-size: 40px;
+    font-weight: 700;
+    color: white;
+    font-family: Garamond, Serif;
+    margin-right: 20px;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.19);
 }
 
 .menu-data {
@@ -59,11 +63,14 @@
     transition: background-color 0.3s ease;
     margin: 0 5px;
     font-weight: 500;
+    background-color: sandybrown;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .menu-data a:hover {
     background-color: #ff6060;
     color: #1a1a1a;
+    transform: scale(0.9);
 }
 
 #Menu-bar {
@@ -92,25 +99,29 @@
     font-size: 14px;
     outline: none;
     transition: border-color 0.3s ease;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .search-bar input[type="text"]:focus {
-    border-color: #ff6060;
+    border-color: brown;
 }
 
 .search-bar button {
     padding: 10px 20px;
-    background-color: #ff6060;
+    background-color: sandybrown;
     color: white;
     border: none;
     border-radius: 0 25px 25px 0;
     cursor: pointer;
     font-size: 14px;
     transition: background-color 0.3s ease;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .search-bar button:hover {
-    background-color: #ff4040;
+    background-color: #ff6060;
+    color: black;
+    transform: scale(0.9);
 }
 /* Dropdown Container */
 .dropdown-container {
@@ -143,7 +154,7 @@
     position: absolute;
     top: 100%;
     right: 0;
-    background-color: black;
+    background-color: rgb(154, 85, 24,0.5);
     min-width: 200px;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
     list-style: none;
@@ -154,7 +165,7 @@
 }
 
 .dropdown li {
-    padding: 0;
+    padding: 5px;
 }
 
 .dropdown li a {
@@ -345,14 +356,15 @@ footer {
     padding: 40px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 20px;
+    justify-content: center;
+    gap: 200px;
 }
 
 .footer-content {
     flex: 1;
     min-width: 200px;
     margin: 10px 0;
+    max-width: 100px;
 }
 
 .footer-content h3 {
@@ -428,4 +440,20 @@ footer {
 
 .book-item {
     position: relative; /* Ensure the star icon is positioned relative to the book item */
+}
+
+
+/*Newly added css*/
+.hero-section{
+    background-image: url("../images/BackgroundImages/book2.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.logo-container{
+    background-color: sandybrown;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 50px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }

@@ -72,8 +72,10 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
-    public Boolean getUserByEmailAndPassword(String email, String password){
-        return userRepository.existsByEmailAndPassword(email, password);
+    public boolean getUserByEmailAndPassword(String email, String password){
+        User user = getUserByEmail(email);
+        return user != null && user.getPassword().equals(password);
+//        return userRepository.existsByEmailAndPassword(email, password);
 
     }
 

@@ -73,7 +73,7 @@ public class UserController {
     public String login(@ModelAttribute("user")User user,RedirectAttributes redirectAttributes, HttpSession session) {
         User logedInUser = userService.getUserByEmail(user.getEmail());
         //kontrollon ne qofte se perdoruesi ka vendosur te dhenat e sakta
-        Boolean passwordAndEmailIncorrect = userService.getUserByEmailAndPassword(user.getEmail(), user.getPassword());
+        boolean passwordAndEmailIncorrect = userService.getUserByEmailAndPassword(user.getEmail(), user.getPassword());
         if(!passwordAndEmailIncorrect){
             redirectAttributes.addFlashAttribute("errorMessageEmailOrPassword", "Email or password incorrect");
             return "redirect:/users/login";
@@ -97,6 +97,10 @@ public class UserController {
                         return "redirect:/books/MainPage";
                     }
                 }
+            }
+            else{
+                redirectAttributes.addFlashAttribute("errorMessageEmailOrPassword", "Email or password incorrect");
+                return "redirect:/users/login";
             }
         }
         return "";
