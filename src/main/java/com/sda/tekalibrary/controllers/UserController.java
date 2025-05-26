@@ -197,6 +197,7 @@ public class UserController {
         return "redirect:/users/login";
     }
 
+    /* Marrim librat e preferuar */
     @GetMapping("/favourite")
     public String getFavouriteBooks(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
