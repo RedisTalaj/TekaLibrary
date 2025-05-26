@@ -72,7 +72,6 @@ public class UserController {
     @PostMapping("/login")
     public String login(@ModelAttribute("user")User user,RedirectAttributes redirectAttributes, HttpSession session) {
         User logedInUser = userService.getUserByEmail(user.getEmail());
-        //kontrollon ne qofte se perdoruesi ka vendosur te dhenat e sakta
         boolean passwordAndEmailIncorrect = userService.getUserByEmailAndPassword(user.getEmail(), user.getPassword());
         if(!passwordAndEmailIncorrect){
             redirectAttributes.addFlashAttribute("errorMessageEmailOrPassword", "Email or password incorrect");
@@ -90,7 +89,6 @@ public class UserController {
                         session.setAttribute("user", logedInUser);
                         return "redirect:/books/MainPage";
                     } else {
-                        //do dergohet te dashboard, por per placeholder vendosim login page
                         redirectAttributes.addFlashAttribute("errorMessageEmailOrPassword",
                                 "Logged in successfully");
                         session.setAttribute("user", logedInUser);

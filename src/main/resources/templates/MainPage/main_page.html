@@ -6,223 +6,318 @@
     <link rel="icon" th:href="@{/Logo/icon.png}">
     <title>TekaLibrary</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" th:href="@{/MainPageCss/mainPage.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Eagle+Lake&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/login/mainPage.css}">
+    <link rel="stylesheet" th:href="@{/MainCss/chatbo.css}">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('sparkle-container');
+            for (let i = 0; i < 50; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = `${Math.random() * 100}%`;
+                sparkle.style.top = `${Math.random() * 100}%`;
+                sparkle.style.animationDelay = `${Math.random() * 2}s`;
+                container.appendChild(sparkle);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!sessionStorage.getItem('visited')) {
+                const animatedElements = document.querySelectorAll('.zoom-animation');
+
+                animatedElements.forEach((element, index) => {
+                    // Initial styles
+                    element.style.transform = 'scale(0.8)';
+                    element.style.opacity = '0';
+
+                    // Stagger the animations with increasing delay
+                    setTimeout(() => {
+                        element.style.transition = 'all 1s ease-out';
+                        element.style.transform = 'scale(1)';
+                        element.style.opacity = '1';
+                    }, 100 + (index * 150)); // 150ms delay between each element
+                });
+
+                sessionStorage.setItem('visited', 'true');
+            }
+        });
+    </script>
 </head>
 <body>
 <!-- Navbar -->
-<section class="hero-section">
-    <nav class="navbar">
-        <div class="data-container">
-            <div class="logo-container">
-                <img th:src="@{/Logo/logo2.png}" alt="logo" class="Logo">
-                <h2 class="library-name">TekaLibrary</h2>
-            </div>
-            <!--Search Bar-->
-            <div class="search-bar">
-                <form th:action="@{/books/searchMainPage}" method="get">
-                    <input type="text" name="keyword" placeholder="Search by title or author..."
-                           th:value="${author != null ? author : (title != null ? title : '')}" required>
-                    <button type="submit">Search</button>
-                </form>
-            </div>
-            <div id="menu-time" class="menu-data animate__animated ">
-                <a th:href="@{/books/MainPage}">Home</a>
-                <a href="#footer">About Us</a>
-                <div class="dropdown-container">
-                    <a href="#" class="dropdown-trigger">Account &dtrif;</a>
-                    <ul class="dropdown">
-                        <li><a class="link" th:href="@{/users/user-profile}">User Profile</a></li>
-                        <li><a class="link" th:href="@{/users/favourite}">Favourite Books</a></li>
-                        <li><a class="link" th:href="@{/users/order-history}">Order History</a></li>
-                        <li th:if="${user != null}"><a class="link" th:href="@{/users/logout}">Log Out</a></li>
-                    </ul>
+<!--<section class="hero-section">-->
+<!--    <nav class="navbar">-->
+<!--        <div class="data-container">-->
+<!--            <div class="logo-main">-->
+<!--                <div class="logo-mainContainer">-->
+<!--                    <div class="logo-container">-->
+<!--                        <img th:src="@{/Logo/logo2.png}" alt="logo" class="Logo">-->
+<!--                        <h2 class="library-name">TekaLibrary</h2>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            &lt;!&ndash;Search Bar&ndash;&gt;-->
+<!--            <div class="search-bar">-->
+<!--                <form th:action="@{/books/searchMainPage}" method="get">-->
+<!--                    <input type="text" name="keyword" placeholder="Search by title or author..."-->
+<!--                           th:value="${author != null ? author : (title != null ? title : '')}" required>-->
+<!--                    <button type="submit">Search</button>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--            <div id="menu-time" class="menu-data animate__animated ">-->
+<!--                <a th:href="@{/books/MainPage}">Home</a>-->
+<!--                <a href="#footer">About Us</a>-->
+<!--                <div class="dropdown-container">-->
+<!--                    <a href="#" class="dropdown-trigger">Account &dtrif;</a>-->
+<!--                    <ul class="dropdown">-->
+<!--                        <li><a class="link" th:href="@{/users/user-profile}">User Profile</a></li>-->
+<!--                        <li><a class="link" th:href="@{/users/favourite}">Favourite Books</a></li>-->
+<!--                        <li><a class="link" th:href="@{/users/order-history}">Order History</a></li>-->
+<!--                        <li th:if="${user != null}"><a class="link" th:href="@{/users/logout}">Log Out</a></li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <a id="Menu-bar" onclick="menubar()"><i class="size-icon fa-solid fa-bars"></i></a>-->
+<!--        </div>-->
+<!--    </nav>-->
+<!--</section>-->
+
+<div class="main-container" id="sparkle-container">
+
+    <!--New Navbar-->
+    <div class="hood-container zoom-animation" >
+        <div class="logo-main2">
+            <div class="logo-mainContainer2">
+                <div class="logo-container2">
+                    <!-- <img src="images/logo2.png" alt="logo" class="Logo2"> -->
+                    <h2 class="library-name2">TekaLibrary</h2>
                 </div>
             </div>
-            <a id="Menu-bar" onclick="menubar()"><i class="size-icon fa-solid fa-bars"></i></a>
-        </div>
-    </nav>
-</section>
-
-<!-- Content Container -->
-<div class="content-container">
-    <!-- Newest Books Section -->
-    <div class="newest-category">
-        <h2>Newest Books</h2>
-        <div class="scroll-wrapper">
-            <div class="book-container" id="newest-books-container">
-                <div class="book-item" th:each="book : ${newestBooks}">
-                    <!-- Star Icon -->
-                    <i th:if="${user != null && user.favoriteBooks.contains(book)}"
-                       class="star-icon fa-solid fa-star"
-                       th:data-book-id="${book.bookId}"
-                       th:data-user-id="${user.userId}"
-                       onclick="toggleFavorite(this)"></i>
-                    <i th:unless="${user != null && user.favoriteBooks.contains(book)}"
-                       class="star-icon fa-regular fa-star"
-                       th:data-book-id="${book.bookId}"
-                       th:data-user-id="${user != null ? user.userId : ''}"
-                       onclick="toggleFavorite(this)"></i>
-
-                    <!-- Book Details -->
-                    <img th:src="@{${book.imagePath}}" alt="Book Image" class="book-image">
-                    <div class="book-details">
-                        <h3 th:text="${book.title}"></h3>
-                        <p th:text="${book.author}"></p>
-                        <p th:text="${book.category}"></p>
-                        <a th:href="@{/books/details/{id}(id=${book.bookId})}">
-                            <button class="details">Details</button>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <button class="scroll-arrow left" id="newest-prev">&larr;</button>
-            <button class="scroll-arrow right" id="newest-next">&rarr;</button>
         </div>
     </div>
+    <div class="nav-bar-container zoom-animation">
+        <div class="search-bar">
+            <form th:action="@{/books/searchMainPage}" method="get">
+                <input type="text" name="keyword" placeholder="Search by title or author..."
+                       th:value="${author != null ? author : (title != null ? title : '')}" required>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div id="menu-time" class="menu-data animate__animated ">
+            <a th:href="@{/books/MainPage}">Home</a>
+            <a href="#footer">About Us</a>
+            <div class="dropdown-container">
+                <a href="#" class="dropdown-trigger">Account &dtrif;</a>
+                <ul class="dropdown">
+                    <li><a class="link" th:href="@{/users/user-profile}">User Profile</a></li>
+                    <li><a class="link" th:href="@{/users/favourite}">Favourite Books</a></li>
+                    <li><a class="link" th:href="@{/users/order-history}">Order History</a></li>
+                    <li th:if="${user != null}"><a class="link" th:href="@{/users/logout}">Log Out</a></li>
+                </ul>
+            </div>
+        </div>
+        <a id="Menu-bar" onclick="menubar()"><i class="size-icon fa-solid fa-bars"></i></a>
+    </div>
 
-    <!-- All Books Section -->
-    <div class="categories">
-        <h2>All Books</h2>
-        <div class="scroll-wrapper">
-            <div class="book-container" id="all-books-container">
-                <div class="book-item" th:each="book : ${books}">
-                    <!-- Star Icon -->
-                    <i th:if="${user != null && user.favoriteBooks.contains(book)}"
-                       class="star-icon fa-solid fa-star"
-                       th:data-book-id="${book.bookId}"
-                       th:data-user-id="${user.userId}"
-                       onclick="toggleFavorite(this)"></i>
-                    <i th:unless="${user != null && user.favoriteBooks.contains(book)}"
-                       class="star-icon fa-regular fa-star"
-                       th:data-book-id="${book.bookId}"
-                       th:data-user-id="${user != null ? user.userId : ''}"
-                       onclick="toggleFavorite(this)"></i>
+    <!-- Content Container -->
+    <div class="content-container zoom-animation">
+        <!-- Newest Books Section -->
+        <div class="newest-category">
+            <h2>Newest Books</h2>
+            <div class="scroll-wrapper">
+                <div class="book-container" id="newest-books-container">
+                    <div class="book-item" th:each="book : ${newestBooks}">
+                        <!-- Star Icon -->
+                        <i th:if="${user != null && user.favoriteBooks.contains(book)}"
+                           class="star-icon fa-solid fa-star"
+                           th:data-book-id="${book.bookId}"
+                           th:data-user-id="${user.userId}"
+                           onclick="toggleFavorite(this)"></i>
+                        <i th:unless="${user != null && user.favoriteBooks.contains(book)}"
+                           class="star-icon fa-regular fa-star"
+                           th:data-book-id="${book.bookId}"
+                           th:data-user-id="${user != null ? user.userId : ''}"
+                           onclick="toggleFavorite(this)"></i>
 
-                    <!-- Book Details -->
-                    <img th:src="@{${book.imagePath}}" alt="Book Image" class="book-image">
-                    <div class="book-details">
-                        <h3 th:text="${book.title}"></h3>
-                        <p th:text="${book.author}"></p>
-                        <p th:text="${book.category}"></p>
+                        <!-- Book Details -->
                         <a th:href="@{/books/details/{id}(id=${book.bookId})}">
-                            <button class="details">Details</button>
+                            <img th:src="@{${book.imagePath}}" alt="Book Image" class="book-image">
                         </a>
+<!--                        <div class="book-details">-->
+<!--                            <h3 th:text="${book.title}"></h3>-->
+<!--                            <p th:text="${book.author}"></p>-->
+<!--                            <p th:text="${book.category}"></p>-->
+<!--                            <a th:href="@{/books/details/{id}(id=${book.bookId})}">-->
+<!--                                <img th:src="@{${book.imagePath}}" alt="Book Image" class="book-image">-->
+<!--                            </a>-->
+<!--                        </div>-->
                     </div>
                 </div>
+                <button class="scroll-arrow left" id="newest-prev">&larr;</button>
+                <button class="scroll-arrow right" id="newest-next">&rarr;</button>
             </div>
-            <button class="scroll-arrow left" id="all-prev">&larr;</button>
-            <button class="scroll-arrow right" id="all-next">&rarr;</button>
+        </div>
+
+        <!-- All Books Section -->
+        <div class="categories">
+            <h2>All Books</h2>
+            <div class="scroll-wrapper">
+                <div class="book-container" id="all-books-container">
+                    <div class="book-item" th:each="book : ${books}">
+                        <!-- Star Icon -->
+                        <i th:if="${user != null && user.favoriteBooks.contains(book)}"
+                           class="star-icon fa-solid fa-star"
+                           th:data-book-id="${book.bookId}"
+                           th:data-user-id="${user.userId}"
+                           onclick="toggleFavorite(this)"></i>
+                        <i th:unless="${user != null && user.favoriteBooks.contains(book)}"
+                           class="star-icon fa-regular fa-star"
+                           th:data-book-id="${book.bookId}"
+                           th:data-user-id="${user != null ? user.userId : ''}"
+                           onclick="toggleFavorite(this)"></i>
+
+                        <!-- Book Details -->
+                        <a th:href="@{/books/details/{id}(id=${book.bookId})}">
+                            <img th:src="@{${book.imagePath}}" alt="Book Image" class="book-image">
+                        </a>
+<!--                        <div class="book-details">-->
+<!--                            <h3 th:text="${book.title}"></h3>-->
+<!--                            <p th:text="${book.author}"></p>-->
+<!--                            <p th:text="${book.category}"></p>-->
+<!--                            <a th:href="@{/books/details/{id}(id=${book.bookId})}">-->
+<!--                                <button class="details">Details</button>-->
+<!--                            </a>-->
+<!--                        </div>-->
+                    </div>
+                </div>
+                <button class="scroll-arrow left" id="all-prev">&larr;</button>
+                <button class="scroll-arrow right" id="all-next">&rarr;</button>
+            </div>
+        </div>
+        <!-- Fiction Books Section -->
+        <div class="categories">
+            <h2>Fiction Books</h2>
+            <div class="scroll-wrapper">
+                <div class="category-books" id="fiction1-books-container">
+                    <div class="book-item" th:each="book : ${fictionBooks}">
+                        <!-- Star Icon -->
+                        <i th:if="${user != null && user.favoriteBooks.contains(book)}"
+                           class="star-icon fa-solid fa-star"
+                           th:data-book-id="${book.bookId}"
+                           th:data-user-id="${user.userId}"
+                           onclick="toggleFavorite(this)"></i>
+                        <i th:unless="${user != null && user.favoriteBooks.contains(book)}"
+                           class="star-icon fa-regular fa-star"
+                           th:data-book-id="${book.bookId}"
+                           th:data-user-id="${user != null ? user.userId : ''}"
+                           onclick="toggleFavorite(this)"></i>
+
+                        <!-- Book Details -->
+                        <a th:href="@{/books/details/{id}(id=${book.bookId})}">
+                            <img th:src="@{${book.imagePath}}" alt="Book Image" class="book-image">
+                        </a>
+<!--                        <div class="book-details">-->
+<!--                            <h3 th:text="${book.title}"></h3>-->
+<!--                            <p th:text="${book.author}"></p>-->
+<!--                            <p th:text="${book.category}"></p>-->
+<!--                            <a th:href="@{/books/details/{id}(id=${book.bookId})}">-->
+<!--                                <button class="details">Details</button>-->
+<!--                            </a>-->
+<!--                        </div>-->
+                    </div>
+                </div>
+                <button class="scroll-arrow left" id="fiction1-prev">&larr;</button>
+                <button class="scroll-arrow right" id="fiction1-next">&rarr;</button>
+            </div>
+        </div>
+        <!--Horror Books Section-->
+        <div class="categories">
+            <h2>Horror Books</h2>
+            <div class="scroll-wrapper">
+                <div class="category-books" id="horror-books-container">
+                    <div class="book-item" th:each="book : ${horrorBooks}">
+                        <!-- Star Icon -->
+                        <i th:if="${user != null && user.favoriteBooks.contains(book)}"
+                           class="star-icon fa-solid fa-star"
+                           th:data-book-id="${book.bookId}"
+                           th:data-user-id="${user.userId}"
+                           onclick="toggleFavorite(this)"></i>
+                        <i th:unless="${user != null && user.favoriteBooks.contains(book)}"
+                           class="star-icon fa-regular fa-star"
+                           th:data-book-id="${book.bookId}"
+                           th:data-user-id="${user != null ? user.userId : ''}"
+                           onclick="toggleFavorite(this)"></i>
+
+                        <!-- Book Details -->
+                        <a th:href="@{/books/details/{id}(id=${book.bookId})}">
+                            <img th:src="@{${book.imagePath}}" alt="Book Image" class="book-image">
+                        </a>
+<!--                        <div class="book-details">-->
+<!--                            <h3 th:text="${book.title}"></h3>-->
+<!--                            <p th:text="${book.author}"></p>-->
+<!--                            <p th:text="${book.category}"></p>-->
+<!--                            <a th:href="@{/books/details/{id}(id=${book.bookId})}">-->
+<!--                                <button class="details">Details</button>-->
+<!--                            </a>-->
+<!--                        </div>-->
+                    </div>
+                </div>
+                <button class="scroll-arrow left" id="horror-prev">&larr;</button>
+                <button class="scroll-arrow right" id="horror-next">&rarr;</button>
+            </div>
+        </div>
+        <!-- Non-Fiction Books Section -->
+        <div class="categories">
+            <h2>Non-Fiction Books</h2>
+            <div class="scroll-wrapper">
+                <div class="category-books" id="fiction-books-container">
+                    <div class="book-item" th:each="book : ${nonFictionBooks}">
+                        <!-- Star Icon -->
+                        <i th:if="${user != null && user.favoriteBooks.contains(book)}"
+                           class="star-icon fa-solid fa-star"
+                           th:data-book-id="${book.bookId}"
+                           th:data-user-id="${user.userId}"
+                           onclick="toggleFavorite(this)"></i>
+                        <i th:unless="${user != null && user.favoriteBooks.contains(book)}"
+                           class="star-icon fa-regular fa-star"
+                           th:data-book-id="${book.bookId}"
+                           th:data-user-id="${user != null ? user.userId : ''}"
+                           onclick="toggleFavorite(this)"></i>
+
+                        <!-- Book Details -->
+                        <a th:href="@{/books/details/{id}(id=${book.bookId})}">
+                            <img th:src="@{${book.imagePath}}" alt="Book Image" class="book-image">
+                        </a>
+<!--                        <div class="book-details">-->
+<!--                            <h3 th:text="${book.title}"></h3>-->
+<!--                            <p th:text="${book.author}"></p>-->
+<!--                            <p th:text="${book.category}"></p>-->
+<!--                            <a th:href="@{/books/details/{id}(id=${book.bookId})}">-->
+<!--                                <button class="details">Details</button>-->
+<!--                            </a>-->
+<!--                        </div>-->
+                    </div>
+                </div>
+                <button class="scroll-arrow left" id="fiction-prev">&larr;</button>
+                <button class="scroll-arrow right" id="fiction-next">&rarr;</button>
+            </div>
         </div>
     </div>
-    <!-- Fiction Books Section -->
-    <div class="categories">
-        <h2>Fiction Books</h2>
-        <div class="scroll-wrapper">
-            <div class="category-books" id="fiction1-books-container">
-                <div class="book-item" th:each="book : ${fictionBooks}">
-                    <!-- Star Icon -->
-                    <i th:if="${user != null && user.favoriteBooks.contains(book)}"
-                       class="star-icon fa-solid fa-star"
-                       th:data-book-id="${book.bookId}"
-                       th:data-user-id="${user.userId}"
-                       onclick="toggleFavorite(this)"></i>
-                    <i th:unless="${user != null && user.favoriteBooks.contains(book)}"
-                       class="star-icon fa-regular fa-star"
-                       th:data-book-id="${book.bookId}"
-                       th:data-user-id="${user != null ? user.userId : ''}"
-                       onclick="toggleFavorite(this)"></i>
-
-                    <!-- Book Details -->
-                    <img th:src="@{${book.imagePath}}" alt="Book Image" class="book-image">
-                    <div class="book-details">
-                        <h3 th:text="${book.title}"></h3>
-                        <p th:text="${book.author}"></p>
-                        <p th:text="${book.category}"></p>
-                        <a th:href="@{/books/details/{id}(id=${book.bookId})}">
-                            <button class="details">Details</button>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <button class="scroll-arrow left" id="fiction1-prev">&larr;</button>
-            <button class="scroll-arrow right" id="fiction1-next">&rarr;</button>
-        </div>
-    </div>
-    <!--Horror Books Section-->
-    <div class="categories">
-        <h2>Horror Books</h2>
-        <div class="scroll-wrapper">
-            <div class="category-books" id="horror-books-container">
-                <div class="book-item" th:each="book : ${horrorBooks}">
-                    <!-- Star Icon -->
-                    <i th:if="${user != null && user.favoriteBooks.contains(book)}"
-                       class="star-icon fa-solid fa-star"
-                       th:data-book-id="${book.bookId}"
-                       th:data-user-id="${user.userId}"
-                       onclick="toggleFavorite(this)"></i>
-                    <i th:unless="${user != null && user.favoriteBooks.contains(book)}"
-                       class="star-icon fa-regular fa-star"
-                       th:data-book-id="${book.bookId}"
-                       th:data-user-id="${user != null ? user.userId : ''}"
-                       onclick="toggleFavorite(this)"></i>
-
-                    <!-- Book Details -->
-                    <img th:src="@{${book.imagePath}}" alt="Book Image" class="book-image">
-                    <div class="book-details">
-                        <h3 th:text="${book.title}"></h3>
-                        <p th:text="${book.author}"></p>
-                        <p th:text="${book.category}"></p>
-                        <a th:href="@{/books/details/{id}(id=${book.bookId})}">
-                            <button class="details">Details</button>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <button class="scroll-arrow left" id="horror-prev">&larr;</button>
-            <button class="scroll-arrow right" id="horror-next">&rarr;</button>
-        </div>
-    </div>
-    <!-- Non-Fiction Books Section -->
-    <div class="categories">
-        <h2>Non-Fiction Books</h2>
-        <div class="scroll-wrapper">
-            <div class="category-books" id="fiction-books-container">
-                <div class="book-item" th:each="book : ${nonFictionBooks}">
-                    <!-- Star Icon -->
-                    <i th:if="${user != null && user.favoriteBooks.contains(book)}"
-                       class="star-icon fa-solid fa-star"
-                       th:data-book-id="${book.bookId}"
-                       th:data-user-id="${user.userId}"
-                       onclick="toggleFavorite(this)"></i>
-                    <i th:unless="${user != null && user.favoriteBooks.contains(book)}"
-                       class="star-icon fa-regular fa-star"
-                       th:data-book-id="${book.bookId}"
-                       th:data-user-id="${user != null ? user.userId : ''}"
-                       onclick="toggleFavorite(this)"></i>
-
-                    <!-- Book Details -->
-                    <img th:src="@{${book.imagePath}}" alt="Book Image" class="book-image">
-                    <div class="book-details">
-                        <h3 th:text="${book.title}"></h3>
-                        <p th:text="${book.author}"></p>
-                        <p th:text="${book.category}"></p>
-                        <a th:href="@{/books/details/{id}(id=${book.bookId})}">
-                            <button class="details">Details</button>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <button class="scroll-arrow left" id="fiction-prev">&larr;</button>
-            <button class="scroll-arrow right" id="fiction-next">&rarr;</button>
-        </div>
+    <div class="legs-container">
     </div>
 </div>
-
 <!-- Footer -->
 <footer>
     <div class="footer-content" id="footer">
-        <h3>About Us</h3>
-        <p>Our goal is to provide you with the best books to read. We have a wide range of books from different genres.</p>
+        <h3>Legal</h3>
+        <ul>
+            <li><a href="#">Site Terms</a></li>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms & Conditions</a></li>
+        </ul>
     </div>
     <div class="footer-content">
         <h3>Quick Links</h3>
@@ -240,7 +335,28 @@
             <li><a href="#">Instagram</a></li>
         </ul>
     </div>
+    <div class="footer-content-new" >
+        <p>Our goal is to provide you with the best books to read. We have a wide range of books from different genres. We intend to build
+            a digital library of Internet sites and others cultural artifacts in digital form.
+        </p>
+    </div>
 </footer>
-<script th:src="@{/MainPageCss/mainPage.js}" defer></script>
+<script th:src="@{/MainCss/chatbox.js}" defer></script>
+<div class="text-center mt-4">
+    <a href="/chat/book-recommendations" class="btn btn-info">Need help finding a book? Ask our AI Librarian!</a>
+</div>
+<script th:src="@{/MainPageCss/mainPage.js}" defer>
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.getElementById('sparkle-container');
+        for (let i = 0; i < 50; i++) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = `${Math.random() * 100}%`;
+            sparkle.style.top = `${Math.random() * 100}%`;
+            sparkle.style.animationDelay = `${Math.random() * 2}s`;
+            container.appendChild(sparkle);
+        }
+    });
+</script>
 </body>
 </html>

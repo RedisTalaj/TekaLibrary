@@ -172,7 +172,7 @@ public class BookController {
         return "redirect:/books";
     }
 
-    // Kërko libra ne book management
+    // Kerko libra ne book management
     @GetMapping("/search")
     public String goToSearch(@RequestParam("keyword") String keyword, Model model) {
         List<Book> books = bookService.searchBookByAuthorOrTitle(keyword);
@@ -327,4 +327,5 @@ public class BookController {
         reviewRepository.deleteById(reviewId);
         return "Review deleted successfully";
     }
+
 }
